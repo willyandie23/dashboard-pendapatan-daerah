@@ -20,6 +20,7 @@
     <link rel="stylesheet" href="{{ asset('assets/css/lib/apexcharts.css') }}">
     <!-- Data Table css -->
     <link rel="stylesheet" href="{{ asset('assets/css/lib/dataTables.min.css') }}">
+    {{-- <link rel="stylesheet" href="https://cdn.datatables.net/1.11.3/css/jquery.dataTables.min.css"> --}}
     <!-- Text Editor css -->
     <link rel="stylesheet" href="{{ asset('assets/css/lib/editor-katex.min.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/css/lib/editor.atom-one-dark.min.css') }}">
@@ -62,11 +63,6 @@
         @include('layouts.headbar')
 
         <div class="dashboard-main-body">
-            {{-- @if(auth()->user()->hasRole(['admin', 'superadmin']))
-                <p>Hai Admin</p>
-            @else
-                <p>Hai User</p>
-            @endif --}}
 
             @yield('content')
 
@@ -84,6 +80,7 @@
     <script src="{{ asset('assets/js/lib/apexcharts.min.js') }}"></script>
     <!-- Data Table js -->
     <script src="{{ asset('assets/js/lib/dataTables.min.js') }}"></script>
+    {{-- <script src="https://cdn.datatables.net/1.11.3/js/jquery.dataTables.min.js"></script> --}}
     <!-- Iconify Font js -->
     <script src="{{ asset('assets/js/lib/iconify-icon.min.js') }}"></script>
     <!-- jQuery UI js -->
@@ -102,15 +99,20 @@
     <!-- audioplayer -->
     <script src="{{ asset('assets/js/lib/audioplayer.js') }}"></script>
 
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
     <!-- main js -->
     <script src="{{ asset('assets/js/app.js') }}"></script>
 
     <script src="{{ asset('assets/js/homeOneChart.js') }}"></script>
 
-    {{-- <script>
+    <script>
         const csrf_token = '{{ csrf_token() }}';
         const token = "{{ session('api_token') }}";
-    </script> --}}
+
+        // console.log('API Token : ', token);
+        // console.log('CSRF : ', csrf_token);
+    </script>
 
     @stack('scripts')
 </body>

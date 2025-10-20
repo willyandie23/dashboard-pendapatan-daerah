@@ -1,6 +1,8 @@
 <?php
 
+use App\Http\Controllers\API\DocumentController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\AppLogController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\laporan\PBBController;
@@ -25,14 +27,21 @@ Route::get('/laporan/bphtb', [BPHTBController::class, 'index'])
 Route::get('/laporan/penerimaan-opd', [PenerimaanOpdController::class, 'index'])
     ->name('laporan.penerimaan-opd');
 
-// Route::get('/dashboard', function () {
-//     return view('dashboard');
-// })->middleware(['auth', 'verified'])->name('dashboard');
+Route::get('/dokumen-publish', [DocumentController::class, 'documentPublicShow'])->name('document.index_public');
 
-Route::middleware('auth')->group(function () {
+Route::middleware('auth', 'role:admin|superadmin')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+
+    Route::get('/app-logs', [AppLogController::class, 'index'])->name('logs.index');
+    Route::get('/app-logs/{id}', [AppLogController::class, 'show'])->name('logs.show');
+
+    Route::get('/dokumen', [DocumentController::class, 'documentShow'])->name('document.index');
+    Route::get('/dokumen/create', [DocumentController::class, 'create'])->name('document.create');
+    Route::get('/dokumen/{id}/edit', [DocumentController::class, 'edit'])->name('document.edit');
+    Route::post('/dokumen', [DocumentController::class, 'store'])->name('document.store');
+    Route::post('/dokumen/{id}/download', [DocumentController::class, 'download'])->name('document.download');
 });
 
 require __DIR__.'/auth.php';

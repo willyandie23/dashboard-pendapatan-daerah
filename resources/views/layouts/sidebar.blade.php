@@ -50,28 +50,41 @@
                 </ul>
             </li>
             <li>
-                <a href="#">
+                <a href="{{ route('document.index_public') }}">
                     <iconify-icon icon="solar:document-add-broken" class="menu-icon"></iconify-icon>
                     <span>Dokumen</span>
                 </a>
             </li>
-            <li class="dropdown">
-                <a href="javascript:void(0)">
-                    <iconify-icon icon="solar:settings-broken" class="menu-icon"></iconify-icon>
-                    <span>Pengaturan</span>
-                </a>
-                <ul class="sidebar-submenu">
-                    <li>
-                        <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
-                            @csrf
-                        </form>
-                        <a href="{{ route('logout') }}" 
-                        onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
-                            <i class="ri-circle-fill circle-icon text-primary-600 w-auto"></i> Logout
-                        </a>
-                    </li>
-                </ul>
-            </li>
+            @hasrole(['admin', 'superadmin'])
+                <li class="dropdown">
+                    <a href="javascript:void(0)">
+                        <iconify-icon icon="solar:settings-broken" class="menu-icon"></iconify-icon>
+                        <span>Pengaturan</span>
+                    </a>
+                    <ul class="sidebar-submenu">
+                        <li>
+                            <a href="{{ route('logs.index') }}">
+                                <i class="ri-circle-fill circle-icon text-warning-main w-auto"></i>
+                                App Log
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{{ route("document.index") }}">
+                                <i class="ri-circle-fill circle-icon text-info-main w-auto"></i>
+                                Input Dokumen
+                            </a>
+                        </li>
+                        <li>
+                            <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+                                @csrf
+                            </form>
+                            <a href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                                <i class="ri-circle-fill circle-icon text-primary-600 w-auto"></i> Logout
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+            @endhasrole
         </ul>
     </div>
 </aside>
