@@ -7,7 +7,7 @@
             <p class="mb-0">Jumlah Pengunjung: 1.234</p>
         </div>
         <div class="col-auto">
-            <p class="mb-0">Helpdesk: bapenda@katingankab.go.id | Call Center: 0811-5090-5559</span></p>
+            <p class="mb-0" id="footer-info"></span></p>
         </div>
     </div>
 </footer>

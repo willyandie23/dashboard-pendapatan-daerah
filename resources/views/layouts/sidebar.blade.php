@@ -3,9 +3,9 @@
         <iconify-icon icon="radix-icons:cross-2"></iconify-icon>
     </button>
     <div>
-        <a href="index.html" class="sidebar-logo">
-            <img src="{{ asset('assets/images/Logo Bapenda Light.png') }}" alt="site logo" class="light-logo">
-            <img src="{{ asset('assets/images/Logo Bapenda Dark.png') }}" class="dark-logo">
+        <a href="{{ route('dashboard') }}" class="sidebar-logo">
+            <img src="" alt="site logo" class="light-logo site_logo">
+            <img src="" class="dark-logo site_logo_dark">
             <img src="{{ asset('assets/images/Logo Kabupaten.png') }}" alt="site logo" class="logo-icon">
         </a>
     </div>
@@ -24,27 +24,33 @@
                 </a>
                 <ul class="sidebar-submenu">
                     <li>
-                        <a href="{{ route('laporan.pendapatan-daerah') }}"><i class="ri-circle-fill circle-icon text-primary-600 w-auto"></i> Pendapatan
+                        <a href="{{ route('laporan.pendapatan-daerah') }}"><i
+                                class="ri-circle-fill circle-icon text-primary-600 w-auto"></i> Pendapatan
                             Daerah</a>
                     </li>
                     <li>
-                        <a href="{{ route('laporan.pajak-daerah') }}"><i class="ri-circle-fill circle-icon text-warning-main w-auto"></i>
+                        <a href="{{ route('laporan.pajak-daerah') }}"><i
+                                class="ri-circle-fill circle-icon text-warning-main w-auto"></i>
                             Pajak Daerah</a>
                     </li>
                     <li>
-                        <a href="{{ route("laporan.retribusi-daerah") }}"><i class="ri-circle-fill circle-icon text-info-main w-auto"></i>
+                        <a href="{{ route('laporan.retribusi-daerah') }}"><i
+                                class="ri-circle-fill circle-icon text-info-main w-auto"></i>
                             Retribusi Daerah</a>
                     </li>
                     <li>
-                        <a href="{{ route('laporan.pbb') }}"><i class="ri-circle-fill circle-icon text-danger-main w-auto"></i>
+                        <a href="{{ route('laporan.pbb') }}"><i
+                                class="ri-circle-fill circle-icon text-danger-main w-auto"></i>
                             PBB</a>
                     </li>
                     <li>
-                        <a href="{{ route('laporan.bphtb') }}"><i class="ri-circle-fill circle-icon text-success-main w-auto"></i>
+                        <a href="{{ route('laporan.bphtb') }}"><i
+                                class="ri-circle-fill circle-icon text-success-main w-auto"></i>
                             BPHTB</a>
                     </li>
                     <li>
-                        <a href="{{ route('laporan.penerimaan-opd') }}"><i class="ri-circle-fill circle-icon text-purple w-auto"></i> Penerimaan
+                        <a href="{{ route('laporan.penerimaan-opd') }}"><i
+                                class="ri-circle-fill circle-icon text-purple w-auto"></i> Penerimaan
                             OPD</a>
                     </li>
                 </ul>
@@ -63,22 +69,30 @@
                     </a>
                     <ul class="sidebar-submenu">
                         <li>
-                            <a href="{{ route('logs.index') }}">
-                                <i class="ri-circle-fill circle-icon text-warning-main w-auto"></i>
-                                App Log
-                            </a>
+                            <a href="{{ route('identity.index') }}"><i
+                                    class="ri-circle-fill circle-icon text-purple w-auto"></i>
+                                Identitas Website</a>
                         </li>
                         <li>
-                            <a href="{{ route("document.index") }}">
+                            <a href="{{ route('document.index') }}">
                                 <i class="ri-circle-fill circle-icon text-info-main w-auto"></i>
                                 Input Dokumen
                             </a>
                         </li>
+                        @hasrole(['superadmin'])
+                            <li>
+                                <a href="{{ route('logs.index') }}">
+                                    <i class="ri-circle-fill circle-icon text-warning-main w-auto"></i>
+                                    App Log
+                                </a>
+                            </li>
+                        @endhasrole
                         <li>
                             <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
                                 @csrf
                             </form>
-                            <a href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                            <a href="{{ route('logout') }}"
+                                onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
                                 <i class="ri-circle-fill circle-icon text-primary-600 w-auto"></i> Logout
                             </a>
                         </li>

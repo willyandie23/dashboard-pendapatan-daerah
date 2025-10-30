@@ -1,11 +1,12 @@
 <?php
 
-use App\Http\Controllers\API\DocumentController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AppLogController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\laporan\PBBController;
+use App\Http\Controllers\API\DocumentController;
+use App\Http\Controllers\API\IdentityController;
 use App\Http\Controllers\laporan\BPHTBController;
 use App\Http\Controllers\laporan\PajakDaerahController;
 use App\Http\Controllers\laporan\PenerimaanOpdController;
@@ -42,6 +43,9 @@ Route::middleware('auth', 'role:admin|superadmin')->group(function () {
     Route::get('/dokumen/{id}/edit', [DocumentController::class, 'edit'])->name('document.edit');
     Route::post('/dokumen', [DocumentController::class, 'store'])->name('document.store');
     Route::post('/dokumen/{id}/download', [DocumentController::class, 'download'])->name('document.download');
+
+    Route::get('/identitas', [IdentityController::class, 'identityShow'])->name('identity.index');
+    Route::post('/identitas', [IdentityController::class, 'store'])->name('identity.store');
 });
 
 require __DIR__.'/auth.php';

@@ -1,4 +1,6 @@
-    // ================================ Column Charts Chart Start ================================ 
+// ================================ Column Charts Chart Start ================================ 
+var columnChartElement = document.querySelector("#columnChart");
+if (columnChartElement) {
     var options = {
         series: [{
             name: 'Target',
@@ -16,13 +18,13 @@
             type: 'bar',
             height: 264,
             toolbar: {
-            show: false
+                show: false
             },
         },
         grid: {
             show: true,
             borderColor: '#D1D5DB',
-            strokeDashArray: 4, // Use a number for dashed style
+            strokeDashArray: 4,
             position: 'back',
         },
         plotOptions: {
@@ -41,9 +43,6 @@
         },
         xaxis: {
             categories: ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agu', 'Sep', 'Okt', 'Nov', 'Des'],
-        },
-        yaxis: {
-            categories: ['0', '6,500,000', '13,000,000', '19,500,000', '26,000,000', '50,000,000'],
         },
         yaxis: {
             labels: {
@@ -65,120 +64,127 @@
         },
     };
 
-    var chart = new ApexCharts(document.querySelector("#columnChart"), options);
+    var chart = new ApexCharts(columnChartElement, options);
     chart.render();
-  // ================================ Column Charts Chart End ================================ 
+}
+// ================================ Column Charts Chart End ================================ 
 
 
-    // ================================ Column with Group Label chart Start ================================ 
+
+// ================================ Column with Group Label chart Start ================================ 
+var columnGroupBarChartElement = document.querySelector("#columnGroupBarChart");
+if (columnGroupBarChartElement) {
     var options = {
-      series: [{
-          name: "Sales",
-          data: [{
-              x: 'Jan',
-              y: 85000,
-          }, {
-              x: 'Feb',
-              y: 70000,
-          }, {
-              x: 'Mar',
-              y: 40000,
-          }, {
-              x: 'Apr',
-              y: 50000,
-          }, {
-              x: 'May',
-              y: 60000,
-          }, {
-              x: 'Jun',
-              y: 50000,
-          }, {
-              x: 'Jul',
-              y: 40000,
-          }, {
-              x: 'Aug',
-              y: 50000,
-          }, {
-              x: 'Sep',
-              y: 40000,
-          }, {
-              x: 'Oct',
-              y: 60000,
-          }, {
-              x: 'Nov',
-              y: 30000,
-          }, {
-              x: 'Dec',
-              y: 50000,
-          }]
-      }],
-      chart: {
-          type: 'bar',
-          height: 264,
-          toolbar: {
-              show: false
-          }
-      },
-      plotOptions: {
-          bar: {
-            horizontal: false,
-            borderRadius: 8,
-            columnWidth: 10,
-            borderRadiusApplication: 'end', // 'around', 'end'
-            borderRadiusWhenStacked: 'last', // 'all', 'last'
-            columnWidth: '23%',
-            endingShape: 'rounded',
-          }
-      },
-      dataLabels: {
-          enabled: false
-      },
-      fill: {
-          type: 'gradient',
-          colors: ['#487FFF'], // Set the starting color (top color) here
-          gradient: {
-              shade: 'light', // Gradient shading type
-              type: 'vertical',  // Gradient direction (vertical)
-              shadeIntensity: 0.5, // Intensity of the gradient shading
-              gradientToColors: ['#487FFF'], // Bottom gradient color (with transparency)
-              inverseColors: false, // Do not invert colors
-              opacityFrom: 1, // Starting opacity
-              opacityTo: 1,  // Ending opacity
-              stops: [0, 100],
-          },
-      },
-      grid: {
-          show: true,
-          borderColor: '#D1D5DB',
-          strokeDashArray: 4, // Use a number for dashed style
-          position: 'back',
-      },
-      xaxis: {
-          type: 'category',
-          categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
-      },
-      yaxis: {
-          labels: {
-              formatter: function (value) {
-                  return (value / 1000).toFixed(0) + 'k';
-              }
-          }
-      },
-      tooltip: {
-          y: {
-              formatter: function (value) {
-                  return value / 1000 + 'k';
-              }
-          }
-      }
+        series: [{
+            name: "Sales",
+            data: [{
+                x: 'Jan',
+                y: 85000,
+            }, {
+                x: 'Feb',
+                y: 70000,
+            }, {
+                x: 'Mar',
+                y: 40000,
+            }, {
+                x: 'Apr',
+                y: 50000,
+            }, {
+                x: 'May',
+                y: 60000,
+            }, {
+                x: 'Jun',
+                y: 50000,
+            }, {
+                x: 'Jul',
+                y: 40000,
+            }, {
+                x: 'Aug',
+                y: 50000,
+            }, {
+                x: 'Sep',
+                y: 40000,
+            }, {
+                x: 'Oct',
+                y: 60000,
+            }, {
+                x: 'Nov',
+                y: 30000,
+            }, {
+                x: 'Dec',
+                y: 50000,
+            }]
+        }],
+        chart: {
+            type: 'bar',
+            height: 264,
+            toolbar: {
+                show: false
+            }
+        },
+        plotOptions: {
+            bar: {
+                horizontal: false,
+                borderRadius: 8,
+                columnWidth: '23%',
+                borderRadiusApplication: 'end',
+                borderRadiusWhenStacked: 'last',
+                endingShape: 'rounded',
+            }
+        },
+        dataLabels: {
+            enabled: false
+        },
+        fill: {
+            type: 'gradient',
+            colors: ['#487FFF'],
+            gradient: {
+                shade: 'light',
+                type: 'vertical',
+                shadeIntensity: 0.5,
+                gradientToColors: ['#487FFF'],
+                inverseColors: false,
+                opacityFrom: 1,
+                opacityTo: 1,
+                stops: [0, 100],
+            },
+        },
+        grid: {
+            show: true,
+            borderColor: '#D1D5DB',
+            strokeDashArray: 4,
+            position: 'back',
+        },
+        xaxis: {
+            type: 'category',
+            categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
+        },
+        yaxis: {
+            labels: {
+                formatter: function (value) {
+                    return (value / 1000).toFixed(0) + 'k';
+                }
+            }
+        },
+        tooltip: {
+            y: {
+                formatter: function (value) {
+                    return value / 1000 + 'k';
+                }
+            }
+        }
     };
 
-    var chart = new ApexCharts(document.querySelector("#columnGroupBarChart"), options);
+    var chart = new ApexCharts(columnGroupBarChartElement, options);
     chart.render();
-  // ================================ Column with Group Label chart End ================================ 
+}
+// ================================ Column with Group Label chart End ================================ 
+
 
   
-    // ================================ Group Column Bar chart Start ================================ 
+// ================================ Group Column Bar chart Start ================================ 
+var groupColumnBarChartElement = document.querySelector("#groupColumnBarChart");
+if (groupColumnBarChartElement) {
     var options = {
         series: [{
             name: 'PRODUCT A',
@@ -221,11 +227,11 @@
                 horizontal: false,
                 borderRadius: 4,
                 columnWidth: 10,
-                borderRadiusApplication: 'end', // 'around', 'end'
-                borderRadiusWhenStacked: 'last', // 'all', 'last'
+                borderRadiusApplication: 'end',
+                borderRadiusWhenStacked: 'last',
                 dataLabels: {
                     total: {
-                        enabled: false, // Disable total data labels
+                        enabled: false,
                         style: {
                             fontSize: '13px',
                             fontWeight: 900
@@ -235,18 +241,18 @@
             },
         },
         dataLabels: {
-            enabled: false // Disable data labels
+            enabled: false
         },
         xaxis: {
             type: 'category',
-            categories: ['01', '03', '05', '07', '10', '13', '16', '19', '21', '23', '25', '27' ],
+            categories: ['01', '03', '05', '07', '10', '13', '16', '19', '21', '23', '25', '27'],
         },
         yaxis: {
-          labels: {
-              formatter: function (value) {
-                  return (value / 1000).toFixed(0) + 'k';
-              }
-          }
+            labels: {
+                formatter: function (value) {
+                    return (value / 1000).toFixed(0) + 'k';
+                }
+            }
         },
         tooltip: {
             y: {
@@ -265,11 +271,15 @@
         }
     };
 
-    var chart = new ApexCharts(document.querySelector("#groupColumnBarChart"), options);
+    var chart = new ApexCharts(groupColumnBarChartElement, options);
     chart.render();
-    // ================================ Group Column Bar chart End ================================ 
+}
+// ================================ Group Column Bar chart End ================================ 
 
-    // ================================ Bars Up Down (Earning Statistics) chart Start ================================ 
+
+// ================================ Bars Up Down (Earning Statistics) chart Start ================================ 
+var upDownBarchartElement = document.querySelector("#upDownBarchart");
+if (upDownBarchartElement) {
     var options = {
         series: [
             {
@@ -314,8 +324,7 @@
                 text: undefined,
             },
             labels: {
-                formatter: function (y)
-    {
+                formatter: function (y) {
                     return y.toFixed(0) + "";
                 },
             },
@@ -351,6 +360,8 @@
             },
         },
     };
-    var chart = new ApexCharts(document.querySelector("#upDownBarchart"), options);
+    
+    var chart = new ApexCharts(upDownBarchartElement, options);
     chart.render();
-      // ================================ Bars Up Down (Earning Statistics) chart End ================================ 
+}
+// ================================ Bars Up Down (Earning Statistics) chart End ================================

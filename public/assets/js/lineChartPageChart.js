@@ -1,4 +1,6 @@
-    // =========================== Default Line Chart Start ===============================
+// =========================== Default Line Chart Start ===============================
+var defaultLineChartElement = document.querySelector("#defaultLineChart");
+if (defaultLineChartElement) {
     var options = {
         series: [{
             name: "This month",
@@ -43,7 +45,7 @@
         },
         grid: {
             row: {
-                colors: ['transparent', 'transparent'], // takes an array which will be repeated on columns
+                colors: ['transparent', 'transparent'],
                 opacity: 0.5
             },
             borderColor: '#D1D5DB',
@@ -75,164 +77,146 @@
             axisBorder: {
                 show: false
             },
-            // crosshairs: {
-            //     show: true,
-            //     width: 20,
-            //     stroke: {
-            //         width: 0
-            //     },
-            //     fill: {
-            //         type: 'solid',
-            //         color: '#487FFF40',
-            //         // gradient: {
-            //         //   colorFrom: '#D8E3F0',
-            //         //   // colorTo: '#BED1E6',
-            //         //   stops: [0, 100],
-            //         //   opacityFrom: 0.4,
-            //         //   opacityTo: 0.5,
-            //         // },
-            //     }
-            // }
         }
     };
 
-    var chart = new ApexCharts(document.querySelector("#defaultLineChart"), options);
+    var chart = new ApexCharts(defaultLineChartElement, options);
     chart.render();
-  // =========================== Default Line Chart End ===============================
+}
+// =========================== Default Line Chart End ===============================
 
-  // =========================== Zoom able Line Chart End ===============================
-    function createChartTwo(chartId, chartColor) {
-        
+
+// =========================== Zoom able Line Chart Start ===============================
+function createChartTwo(chartId, chartColor) {
+    var chartElement = document.querySelector(`#${chartId}`);
+    if (chartElement) {
         var options = {
-        series: [
-            {
-                name: 'This Day',
-                data: [12, 18, 12, 48, 18, 30, 18, 15, 88, 40, 65, 24, 48],
-            },
-        ],
-        chart: {
-            type: 'area',
-            width: '100%',
-            height: 264,
-            sparkline: {
-                enabled: false // Remove whitespace
-            },
-            toolbar: {
-                show: false
-            },
-            padding: {
-                left: 0,
-                right: 0,
-                top: 0,
-                bottom: 0
-            }
-        },
-        dataLabels: {
-            enabled: false
-        },
-        stroke: {
-            curve: 'straight',
-            width: 4,
-            colors: [chartColor],
-            lineCap: 'round'
-        },
-        grid: {
-            show: true,
-            borderColor: '#D1D5DB',
-            strokeDashArray: 3,
-            position: 'back',
-            xaxis: {
-                lines: {
-                    show: false
-                }
-            },   
-            yaxis: {
-                lines: {
-                    show: true
-                }
-            },  
-            row: {
-                colors: undefined,
-                opacity: 0.5
-            },  
-            column: {
-                colors: undefined,
-                opacity: 0.5
-            },  
-            padding: {
-                top: 0,
-                right: 0,
-                bottom: 0,
-                left: 0
-            },  
-        },
-        fill: {
-            type: 'gradient',
-            colors: [chartColor], // Set the starting color (top color) here
-            gradient: {
-                shade: 'light', // Gradient shading type
-                type: 'vertical',  // Gradient direction (vertical)
-                shadeIntensity: 0.5, // Intensity of the gradient shading
-                gradientToColors: [`${chartColor}00`], // Bottom gradient color (with transparency)
-                inverseColors: false, // Do not invert colors
-                opacityFrom: .6, // Starting opacity
-                opacityTo: 0.3,  // Ending opacity
-                stops: [0, 100],
-            },
-        },
-        // Customize the circle marker color on hover
-        markers: {
-            colors: [chartColor],
-            strokeWidth: 3,
-            size: 0,
-            hover: {
-            size: 10
-            }
-        },
-            xaxis: {
-                labels: {
+            series: [
+                {
+                    name: 'This Day',
+                    data: [12, 18, 12, 48, 18, 30, 18, 15, 88, 40, 65, 24, 48],
+                },
+            ],
+            chart: {
+                type: 'area',
+                width: '100%',
+                height: 264,
+                sparkline: {
+                    enabled: false
+                },
+                toolbar: {
                     show: false
                 },
+                padding: {
+                    left: 0,
+                    right: 0,
+                    top: 0,
+                    bottom: 0
+                }
+            },
+            dataLabels: {
+                enabled: false
+            },
+            stroke: {
+                curve: 'straight',
+                width: 4,
+                colors: [chartColor],
+                lineCap: 'round'
+            },
+            grid: {
+                show: true,
+                borderColor: '#D1D5DB',
+                strokeDashArray: 3,
+                position: 'back',
+                xaxis: {
+                    lines: {
+                        show: false
+                    }
+                },   
+                yaxis: {
+                    lines: {
+                        show: true
+                    }
+                },  
+                row: {
+                    colors: undefined,
+                    opacity: 0.5
+                },  
+                column: {
+                    colors: undefined,
+                    opacity: 0.5
+                },  
+                padding: {
+                    top: 0,
+                    right: 0,
+                    bottom: 0,
+                    left: 0
+                },  
+            },
+            fill: {
+                type: 'gradient',
+                colors: [chartColor],
+                gradient: {
+                    shade: 'light',
+                    type: 'vertical',
+                    shadeIntensity: 0.5,
+                    gradientToColors: [`${chartColor}00`],
+                    inverseColors: false,
+                    opacityFrom: .6,
+                    opacityTo: 0.3,
+                    stops: [0, 100],
+                },
+            },
+            markers: {
+                colors: [chartColor],
+                strokeWidth: 3,
+                size: 0,
+                hover: {
+                    size: 10
+                }
+            },
+            xaxis: {
                 categories: [`Jan`, `Feb`, `Mar`, `Apr`, `May`, `Jun`, `Jul`, `Aug`, `Sep`, `Oct`, `Nov`, `Dec`],
-                tooltip: {
-                    enabled: false,
-                },
                 tooltip: {
                     enabled: false
                 },
                 labels: {
                     formatter: function (value) {
-                    return value;
+                        return value;
                     },
                     style: {
-                    fontSize: "14px"
+                        fontSize: "14px"
                     }
                 },
             },
             yaxis: {
-                    labels: {
-                        formatter: function (value) {
+                labels: {
+                    formatter: function (value) {
                         return "$" + value + "k";
-                        },
-                        style: {
-                        fontSize: "14px"
-                        }
                     },
+                    style: {
+                        fontSize: "14px"
+                    }
+                },
             },
-        tooltip: {
-            x: {
-                format: 'dd/MM/yy HH:mm'
+            tooltip: {
+                x: {
+                    format: 'dd/MM/yy HH:mm'
+                },
             },
-        },
         };
 
-        var chart = new ApexCharts(document.querySelector(`#${chartId}`), options);
+        var chart = new ApexCharts(chartElement, options);
         chart.render();
     }
-    createChartTwo('zoomAbleLineChart', '#487fff');
-  // =========================== Zoom able Line Chart End ===============================
+}
+createChartTwo('zoomAbleLineChart', '#487fff');
+// =========================== Zoom able Line Chart End ===============================
 
-  // =========================== Line Chart With Data labels Start ===============================
+
+// =========================== Line Chart With Data labels Start ===============================
+var lineDataLabelElement = document.querySelector("#lineDataLabel");
+if (lineDataLabelElement) {
     var options = {
         series: [{
             name: "Desktops",
@@ -249,7 +233,7 @@
                 show: false
             },
         },
-        colors: ['#487FFF'],  // Set the color of the series
+        colors: ['#487FFF'],
         dataLabels: {
             enabled: true
         },
@@ -259,29 +243,21 @@
             color: "#000"
         },
         markers: {
-            size: 0,
-            strokeWidth: 3,
-            hover: {
-                size: 8
-            }
-        },
-        grid: {
-            show: true,
-            borderColor: '#D1D5DB',
-            strokeDashArray: 3,
-          row: {
-            colors: ['#f3f3f3', 'transparent'],
-            opacity: 0,
-          },
-        },
-        // Customize the circle marker color on hover
-        markers: {
             colors: '#487FFF',
             strokeWidth: 3,
             size: 0,
             hover: {
                 size: 10
             }
+        },
+        grid: {
+            show: true,
+            borderColor: '#D1D5DB',
+            strokeDashArray: 3,
+            row: {
+                colors: ['#f3f3f3', 'transparent'],
+                opacity: 0,
+            },
         },
         xaxis: {
             categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
@@ -290,182 +266,182 @@
             }
         },
         yaxis: {
-                labels: {
-                    formatter: function (value) {
-                        return "$" + value + "k";
-                    },
-                    style: {
-                        fontSize: "14px"
-                    }
+            labels: {
+                formatter: function (value) {
+                    return "$" + value + "k";
                 },
+                style: {
+                    fontSize: "14px"
+                }
+            },
         },
     };
 
-    var chart = new ApexCharts(document.querySelector("#lineDataLabel"), options);
+    var chart = new ApexCharts(lineDataLabelElement, options);
     chart.render();
-  // =========================== Line Chart With Data labels End ===============================
+}
+// =========================== Line Chart With Data labels End ===============================
 
-  // =========================== Double Line Chart Start ===============================
-    function createLineChart(chartId, chartColor) {
+
+// =========================== Double Line Chart Start ===============================
+function createLineChart(chartId, chartColor) {
+    var chartElement = document.querySelector(`#${chartId}`);
+    if (chartElement) {
+        var options = {
+            series: [
+                {
+                    name: 'Target',
+                    data: [800000, 150000, 90000, 200000, 100000, 330000, 130000, 220000, 80000, 170000, 100000, 150000],
+                },
+                {
+                    name: 'Realisasi',
+                    data: [80000, 240000, 180000, 400000, 180000, 480000, 220000, 380000, 180000, 300000, 200000, 280000],
+                },
+            ],
+            chart: {
+                type: 'line',
+                width: '100%',
+                height: 264,
+                sparkline: {
+                    enabled: false
+                },
+                toolbar: {
+                    show: false
+                },
+                padding: {
+                    left: 0,
+                    right: 0,
+                    top: 0,
+                    bottom: 0
+                }
+            },
+            colors: ['#487FFF', '#FF9F29'],
+            dataLabels: {
+                enabled: false
+            },
+            stroke: {
+                curve: 'smooth',
+                width: 4,
+                colors: ["#FF9F29", chartColor],
+                lineCap: 'round',
+            },
+            grid: {
+                show: true,
+                borderColor: '#D1D5DB',
+                strokeDashArray: 3,
+                position: 'back',
+                xaxis: {
+                    lines: {
+                        show: false
+                    }
+                },   
+                yaxis: {
+                    lines: {
+                        show: true
+                    }
+                },  
+                row: {
+                    colors: undefined,
+                    opacity: 0.5
+                },  
+                column: {
+                    colors: undefined,
+                    opacity: 0.5
+                },  
+                padding: {
+                    top: 0,
+                    right: 0,
+                    bottom: 0,
+                    left: 0
+                },  
+            },
+            markers: {
+                colors: ["#FF9F29", chartColor],
+                strokeWidth: 3,
+                size: 0,
+                hover: {
+                    size: 10
+                }
+            },
+            xaxis: {
+                categories: [`Jan`, `Feb`, `Mar`, `Apr`, `Mei`, `Jun`, `Jul`, `Agu`, `Sep`, `Okt`, `Nov`, `Des`],
+                tooltip: {
+                    enabled: false,        
+                },
+                labels: {
+                    formatter: function (value) {
+                        return value;
+                    },
+                    style: {
+                        fontSize: "10px"
+                    }
+                },
+            },
+            yaxis: {
+                min: 0,
+                max: 1000000,
+                tickAmount: 4,
+                labels: {
+                    formatter: function (value) {
+                        return value.toLocaleString();
+                    },
+                    style: {
+                        fontSize: "10px"
+                    }
+                },
+            },
+            tooltip: {
+                x: {
+                    format: 'dd/MM/yy HH:mm'
+                },
+            },
+            legend: {
+                show: false
+            }
+        };
+
+        var chart = new ApexCharts(chartElement, options);
+        chart.render();
+    }
+}
+createLineChart('doubleLineChart', '#487fff');
+// =========================== Double Line Chart End ===============================
+
+
+// =========================== Step Line Chart Start ===============================
+var stepLineChartElement = document.querySelector("#stepLineChart");
+if (stepLineChartElement) {
     var options = {
-        series: [
-            {
-            name: 'Target',
-            data: [800000, 150000, 90000, 200000, 100000, 330000, 130000, 220000, 80000, 170000, 100000, 150000],
-            },
-            {
-            name: 'Realisasi',
-                data: [80000, 240000, 180000, 400000, 180000, 480000, 220000, 380000, 180000, 300000, 200000, 280000],
-            },
-        ],
+        series: [{
+            data: [16, 25, 38, 50, 32, 20, 42, 18, 4, 25, 12, 12],
+            name: "Example",
+        }],
         chart: {
             type: 'line',
-            width: '100%',
-            height: 264,
-            sparkline: {
-            enabled: false // Remove whitespace
-            },
+            height: 270,
             toolbar: {
                 show: false
             },
-            padding: {
-                left: 0,
-                right: 0,
-                top: 0,
-                bottom: 0
-            }
         },
-        colors: ['#487FFF', '#FF9F29'],  // Set the color of the series
+        stroke: {
+            curve: 'stepline',
+        },
+        colors: ['#487FFF'],
         dataLabels: {
             enabled: false
         },
-        stroke: {
-            curve: 'smooth',
-            width: 4,
-            colors: ["#FF9F29", chartColor],
-            lineCap: 'round',
+        markers: {
+            hover: {
+                sizeOffset: 4
+            }
         },
         grid: {
             show: true,
             borderColor: '#D1D5DB',
             strokeDashArray: 3,
             position: 'back',
-            xaxis: {
-                lines: {
-                    show: false
-                }
-            },   
-            yaxis: {
-                lines: {
-                    show: true
-                }
-            },  
-            row: {
-                colors: undefined,
-                opacity: 0.5
-            },  
-            column: {
-                colors: undefined,
-                opacity: 0.5
-            },  
-            padding: {
-                top: 0,
-                right: 0,
-                bottom: 0,
-                left: 0
-            },  
-        },
-        // Customize the circle marker color on hover
-        markers: {
-        colors: ["#FF9F29", chartColor],
-        strokeWidth: 3,
-        size: 0,
-        hover: {
-            size: 10
-        }
         },
         xaxis: {
-            labels: {
-                show: false
-            },
-            categories: [`Jan`, `Feb`, `Mar`, `Apr`, `Mei`, `Jun`, `Jul`, `Agu`, `Sep`, `Okt`, `Nov`, `Des`],
-            tooltip: {
-                enabled: false,        
-            },
-            labels: {
-                formatter: function (value) {
-                    return value;
-                },
-                style: {
-                    fontSize: "10px"
-                }
-            },
-        },
-        yaxis: {
-            min: 0,   // Nilai minimum
-            max: 1000000,  // Nilai maksimum
-            tickAmount: 4, // Jumlah tick yang diinginkan (4 interval)
-            labels: {
-                formatter: function (value) {
-                    return value.toLocaleString(); // Format angka dengan pemisah ribuan
-                },
-                style: {
-                    fontSize: "10px"
-                }
-            },
-        },
-        tooltip: {
-            x: {
-                format: 'dd/MM/yy HH:mm'
-            },
-        },
-        legend: {
-            show: false
-        }
-    };
-
-    var chart = new ApexCharts(document.querySelector(`#${chartId}`), options);
-    chart.render();
-    }
-    createLineChart('doubleLineChart', '#487fff');
-  // =========================== Double Line Chart End ===============================
-
-
-  // =========================== Step Line Chart Start ===============================
-    var options = {
-        series: [{
-          data: [16, 25, 38, 50, 32, 20, 42, 18, 4, 25, 12, 12],
-          name: "Example",
-        }],
-        chart: {
-          type: 'line',
-          height: 270,
-          toolbar: {
-              show: false
-          },
-        },
-        stroke: {
-          curve: 'stepline',
-        },
-        colors: ['#487FFF'],  // Set the color of the series
-        dataLabels: {
-          enabled: false
-        },
-        markers: {
-          hover: {
-            sizeOffset: 4
-          }
-        },
-        grid: {
-          show: true,
-          borderColor: '#D1D5DB',
-          strokeDashArray: 3,
-          position: 'back',
-        },
-        xaxis: {
-            labels: {
-                show: false
-            },
             categories: [`Jan`, `Feb`, `Mar`, `Apr`, `May`, `Jun`, `Jul`, `Aug`, `Sep`, `Oct`, `Nov`, `Dec`],
             tooltip: {
                 enabled: false,        
@@ -480,22 +456,26 @@
             },
         },
         yaxis: {
-                labels: {
-                    formatter: function (value) {
-                        return "$" + value + "k";
-                    },
-                    style: {
-                        fontSize: "14px"
-                    }
+            labels: {
+                formatter: function (value) {
+                    return "$" + value + "k";
                 },
+                style: {
+                    fontSize: "14px"
+                }
+            },
         },
     };
 
-    var chart = new ApexCharts(document.querySelector("#stepLineChart"), options);
+    var chart = new ApexCharts(stepLineChartElement, options);
     chart.render();
-  // =========================== Step Line Chart End ===============================
+}
+// =========================== Step Line Chart End ===============================
 
-    // =========================== Gradient Line Chart Start ===============================
+
+// =========================== Gradient Line Chart Start ===============================
+var gradientLineChartElement = document.querySelector("#gradientLineChart");
+if (gradientLineChartElement) {
     var options = {
         series: [{
             name: "This month",
@@ -516,20 +496,20 @@
         },
         stroke: {
             curve: 'smooth',
-            colors: ['#FF9F29'], // Specify the line color here
+            colors: ['#FF9F29'],
             width: 4
         },
         fill: {
-          type: 'gradient',
-          gradient: {
-            shade: 'dark',
-            gradientToColors: [ '#0E53F4'],
-            shadeIntensity: 1,
-            type: 'horizontal',
-            opacityFrom: 1,
-            opacityTo: 1,
-            stops: [0, 100, 100, 100]
-          },
+            type: 'gradient',
+            gradient: {
+                shade: 'dark',
+                gradientToColors: ['#0E53F4'],
+                shadeIntensity: 1,
+                type: 'horizontal',
+                opacityFrom: 1,
+                opacityTo: 1,
+                stops: [0, 100, 100, 100]
+            },
         },
         markers: {
             size: 0,
@@ -552,7 +532,7 @@
         },
         grid: {
             row: {
-                colors: ['transparent', 'transparent'], // takes an array which will be repeated on columns
+                colors: ['transparent', 'transparent'],
                 opacity: 0.5
             },
             borderColor: '#D1D5DB',
@@ -561,10 +541,10 @@
         yaxis: {
             labels: {
                 formatter: function (value) {
-                return "$" + value + "k";
+                    return "$" + value + "k";
                 },
                 style: {
-                fontSize: "14px"
+                    fontSize: "14px"
                 }
             },
         },
@@ -575,7 +555,7 @@
             },
             labels: {
                 formatter: function (value) {
-                return value;
+                    return value;
                 },
                 style: {
                     fontSize: "14px"
@@ -587,7 +567,7 @@
         }
     };
 
-    var chart = new ApexCharts(document.querySelector("#gradientLineChart"), options);
+    var chart = new ApexCharts(gradientLineChartElement, options);
     chart.render();
-  // =========================== Gradient Line Chart End ===============================
-
+}
+// =========================== Gradient Line Chart End ===============================

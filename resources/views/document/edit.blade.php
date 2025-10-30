@@ -1,16 +1,112 @@
 @extends('layouts.app')
 
+@section('title', 'Admin - Edit Dokumen')
+
 @push('styles')
     <style>
+        /* CSS Variables untuk Light dan Dark Mode */
+        :root {
+            /* Light mode variables */
+            --edit-bg: #ffffff;
+            --edit-card-bg: #ffffff;
+            --edit-text-primary: #212529;
+            --edit-text-secondary: #6c757d;
+            --edit-text-muted: #495057;
+            --edit-border: #dee2e6;
+            --edit-input-bg: #ffffff;
+            --edit-input-border: #ced4da;
+            --edit-dropzone-bg: #f8f9fa;
+            --edit-dropzone-border: #ccc;
+            --edit-dropzone-hover-bg: #e7f3ff;
+            --edit-dropzone-drag-bg: #d4edda;
+            --edit-preview-bg: #ffffff;
+            --edit-current-file-bg: #e7f3ff;
+            --edit-current-file-border: #bee5eb;
+            --edit-current-file-header: #0c5460;
+            --edit-current-file-text: #004085;
+            --edit-icon-color: #6c757d;
+            --edit-card-shadow: rgba(0, 0, 0, 0.1);
+        }
+
+        [data-theme="dark"] {
+            /* Dark mode variables */
+            --edit-bg: #0f172a;
+            --edit-card-bg: #1e293b;
+            --edit-text-primary: #f1f5f9;
+            --edit-text-secondary: #94a3b8;
+            --edit-text-muted: #cbd5e1;
+            --edit-border: #334155;
+            --edit-input-bg: #334155;
+            --edit-input-border: #475569;
+            --edit-dropzone-bg: #334155;
+            --edit-dropzone-border: #64748b;
+            --edit-dropzone-hover-bg: #475569;
+            --edit-dropzone-drag-bg: #1e3a28;
+            --edit-preview-bg: #334155;
+            --edit-current-file-bg: #1e3a3f;
+            --edit-current-file-border: #2d5a5f;
+            --edit-current-file-header: #67e8f9;
+            --edit-current-file-text: #a5f3fc;
+            --edit-icon-color: #94a3b8;
+            --edit-card-shadow: rgba(0, 0, 0, 0.3);
+        }
+
         .upload-container {
             max-width: 800px;
             margin: 0 auto;
         }
 
+        /* Card styling */
+        .card {
+            background: var(--edit-card-bg);
+            border: 1px solid var(--edit-border);
+            box-shadow: 0 2px 8px var(--edit-card-shadow);
+            border-radius: 12px;
+            transition: all 0.3s ease;
+        }
+
+        .card-body {
+            color: var(--edit-text-primary);
+            transition: color 0.3s ease;
+        }
+
+        .card-title {
+            color: var(--edit-text-primary);
+            font-weight: 600;
+            transition: color 0.3s ease;
+        }
+
+        /* Form elements */
+        .form-label {
+            color: var(--edit-text-muted);
+            font-weight: 600;
+            transition: color 0.3s ease;
+        }
+
+        .form-control {
+            background: var(--edit-input-bg);
+            color: var(--edit-text-primary);
+            border: 1.5px solid var(--edit-input-border);
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .form-control:focus {
+            background: var(--edit-input-bg);
+            color: var(--edit-text-primary);
+            border-color: #4f46e5;
+            box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+        }
+
+        .form-control::placeholder {
+            color: var(--edit-text-secondary);
+        }
+
+        /* Back Link */
         .back-link {
             display: inline-flex;
             align-items: center;
-            color: #6c757d;
+            color: var(--edit-text-secondary);
             text-decoration: none;
             font-size: 14px;
             margin-bottom: 20px;
@@ -18,7 +114,7 @@
         }
 
         .back-link:hover {
-            color: #495057;
+            color: var(--edit-text-primary);
             text-decoration: none;
         }
 
@@ -29,18 +125,20 @@
 
         /* Current File Display */
         .current-file {
-            background: #e7f3ff;
-            border: 1px solid #bee5eb;
-            border-radius: 6px;
+            background: var(--edit-current-file-bg);
+            border: 1px solid var(--edit-current-file-border);
+            border-radius: 8px;
             padding: 15px;
             margin-bottom: 15px;
+            transition: all 0.3s ease;
         }
 
         .current-file-header {
             font-size: 13px;
             font-weight: 600;
-            color: #0c5460;
+            color: var(--edit-current-file-header);
             margin-bottom: 8px;
+            transition: color 0.3s ease;
         }
 
         .current-file-info {
@@ -51,30 +149,47 @@
 
         .current-file-icon {
             font-size: 24px;
+            flex-shrink: 0;
+            /* Prevent icon from shrinking */
         }
 
         .current-file-name {
             flex: 1;
-            color: #004085;
+            color: var(--edit-current-file-text);
             font-weight: 500;
+            transition: color 0.3s ease;
+            /* Prevent text overflow */
+            overflow: hidden;
+            word-wrap: break-word;
+            word-break: break-word;
+            overflow-wrap: break-word;
+            hyphens: auto;
+            min-width: 0;
+            /* Important for flex items */
         }
 
         .change-file-btn {
             font-size: 12px;
             padding: 4px 10px;
+            border-radius: 6px;
+            transition: all 0.3s ease;
+            flex-shrink: 0;
+            /* Prevent button from shrinking */
+            white-space: nowrap;
+            /* Keep button text on one line */
         }
 
+        /* Drop Zone Styling */
         .drop-zone {
-            border: 2px dashed #ccc;
-            border-radius: 8px;
+            border: 2px dashed var(--edit-dropzone-border);
+            border-radius: 12px;
             padding: 40px;
             text-align: center;
             cursor: pointer;
             transition: all 0.3s ease;
-            background: #f8f9fa;
+            background: var(--edit-dropzone-bg);
             margin-bottom: 20px;
             display: none;
-            /* Hidden by default */
         }
 
         .drop-zone.show {
@@ -83,43 +198,50 @@
 
         .drop-zone:hover {
             border-color: #007bff;
-            background: #e7f3ff;
+            background: var(--edit-dropzone-hover-bg);
+            transform: translateY(-2px);
         }
 
         .drop-zone.drag-over {
             border-color: #28a745;
-            background: #d4edda;
+            background: var(--edit-dropzone-drag-bg);
             transform: scale(1.02);
+            box-shadow: 0 4px 12px rgba(40, 167, 69, 0.2);
         }
 
         .drop-zone-icon {
             font-size: 48px;
-            color: #6c757d;
+            color: var(--edit-icon-color);
             margin-bottom: 15px;
+            transition: color 0.3s ease;
         }
 
         .drop-zone-text {
             font-size: 16px;
-            color: #495057;
+            color: var(--edit-text-primary);
             margin-bottom: 8px;
+            transition: color 0.3s ease;
         }
 
         .drop-zone-hint {
             font-size: 13px;
-            color: #6c757d;
+            color: var(--edit-text-secondary);
+            transition: color 0.3s ease;
         }
 
         #file {
             display: none;
         }
 
+        /* File Preview */
         .file-preview {
             display: none;
             margin-top: 20px;
             padding: 15px;
-            background: #fff;
-            border: 1px solid #dee2e6;
-            border-radius: 6px;
+            background: var(--edit-preview-bg);
+            border: 1px solid var(--edit-border);
+            border-radius: 8px;
+            transition: all 0.3s ease;
         }
 
         .file-preview.show {
@@ -143,21 +265,30 @@
 
         .file-name {
             font-weight: 600;
-            color: #212529;
+            color: var(--edit-text-primary);
             margin-bottom: 4px;
+            transition: color 0.3s ease;
         }
 
         .file-size {
             font-size: 13px;
-            color: #6c757d;
+            color: var(--edit-text-secondary);
+            transition: color 0.3s ease;
         }
 
         .remove-file {
             cursor: pointer;
             color: #dc3545;
             font-size: 20px;
+            transition: all 0.3s ease;
         }
 
+        .remove-file:hover {
+            color: #b91c1c;
+            transform: scale(1.1);
+        }
+
+        /* Upload Progress */
         .upload-progress {
             display: none;
             margin-top: 15px;
@@ -167,10 +298,225 @@
             display: block;
         }
 
+        .upload-progress .form-label {
+            margin-bottom: 8px;
+        }
+
+        .progress {
+            background-color: var(--edit-dropzone-bg);
+            border: 1px solid var(--edit-border);
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+
+        /* Button Styling */
         .form-actions {
             display: flex;
             gap: 10px;
             margin-top: 20px;
+        }
+
+        .btn-success {
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            border: none;
+            border-radius: 8px;
+            padding: 0.625rem 1.5rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 8px rgba(16, 185, 129, 0.25);
+            color: white;
+        }
+
+        .btn-success:hover:not(:disabled) {
+            background: linear-gradient(135deg, #059669 0%, #047857 100%);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.35);
+            color: white;
+        }
+
+        .btn-success:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        .btn-outline-secondary {
+            background: transparent;
+            color: var(--edit-text-secondary);
+            border: 2px solid var(--edit-border);
+            border-radius: 8px;
+            padding: 0.625rem 1.5rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .btn-outline-secondary:hover {
+            background: var(--edit-dropzone-bg);
+            color: var(--edit-text-primary);
+            border-color: var(--edit-text-secondary);
+            transform: translateY(-2px);
+        }
+
+        .btn-outline-primary {
+            background: transparent;
+            color: #007bff;
+            border: 1px solid #007bff;
+            transition: all 0.3s ease;
+        }
+
+        .btn-outline-primary:hover {
+            background: #007bff;
+            color: white;
+            border-color: #007bff;
+        }
+
+        [data-theme="dark"] .btn-outline-primary {
+            color: #60a5fa;
+            border-color: #60a5fa;
+        }
+
+        [data-theme="dark"] .btn-outline-primary:hover {
+            background: #60a5fa;
+            color: #0f172a;
+            border-color: #60a5fa;
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .upload-container {
+                padding: 1rem;
+            }
+
+            .card-body {
+                padding: 1.5rem;
+            }
+
+            .drop-zone {
+                padding: 30px 15px;
+            }
+
+            .form-actions {
+                flex-direction: column;
+            }
+
+            .form-actions .btn {
+                width: 100%;
+            }
+
+            /* Improved current file info for mobile */
+            .current-file-info {
+                flex-wrap: wrap;
+                gap: 8px;
+            }
+
+            .current-file-name {
+                /* Allow filename to take full width */
+                flex-basis: 100%;
+                max-width: 100%;
+                font-size: 14px;
+                line-height: 1.4;
+            }
+
+            .change-file-btn {
+                width: 100%;
+                margin-top: 8px;
+                flex-basis: 100%;
+            }
+
+            .file-info {
+                flex-wrap: wrap;
+                gap: 10px;
+            }
+
+            .file-icon {
+                font-size: 28px;
+            }
+
+            .file-details {
+                flex-basis: calc(100% - 50px);
+            }
+
+            .remove-file {
+                flex-basis: 100%;
+                text-align: center;
+                padding: 8px;
+                background: rgba(220, 53, 69, 0.1);
+                border-radius: 6px;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .card-body {
+                padding: 1rem;
+            }
+
+            .current-file {
+                padding: 12px;
+            }
+
+            .current-file-name {
+                font-size: 13px;
+            }
+
+            .current-file-icon {
+                font-size: 20px;
+            }
+        }
+
+        /* File Preview - Apply same responsive treatment */
+        .file-info {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 10px;
+        }
+
+        .file-icon {
+            font-size: 32px;
+            flex-shrink: 0;
+        }
+
+        .file-details {
+            flex: 1;
+            min-width: 0;
+            /* Important for flex items */
+            overflow: hidden;
+        }
+
+        .file-name {
+            font-weight: 600;
+            color: var(--edit-text-primary);
+            margin-bottom: 4px;
+            transition: color 0.3s ease;
+            /* Prevent text overflow */
+            overflow: hidden;
+            word-wrap: break-word;
+            word-break: break-word;
+            overflow-wrap: break-word;
+        }
+
+        .file-size {
+            font-size: 13px;
+            color: var(--edit-text-secondary);
+            transition: color 0.3s ease;
+        }
+
+        .remove-file {
+            cursor: pointer;
+            color: #dc3545;
+            font-size: 20px;
+            transition: all 0.3s ease;
+            flex-shrink: 0;
+        }
+
+        .remove-file:hover {
+            color: #b91c1c;
+            transform: scale(1.1);
+        }
+
+        /* Smooth transitions */
+        * {
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
         }
     </style>
 @endpush
@@ -179,7 +525,6 @@
     <div class="container upload-container">
         <div class="row">
             <div class="col-12">
-
                 <div class="card shadow-sm">
                     <div class="card-body">
                         <h4 class="card-title mb-4">Edit Dokumen</h4>

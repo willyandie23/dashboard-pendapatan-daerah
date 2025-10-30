@@ -1,5 +1,7 @@
 @extends('layouts.app')
 
+@section('title', 'Laporan - Pajak Daerah')
+
 @push('styles')
     <style>
         .chart-container {
@@ -74,7 +76,7 @@
         [data-theme="dark"] .chart-title {
             color: #fff;
         }
-        
+
         [data-theme="dark"] .accordion-button {
             color: #fff;
         }
@@ -354,216 +356,227 @@
 @endsection
 
 @push('scripts')
-<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/exceljs@4.3.0/dist/exceljs.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/file-saver@2.0.5/dist/FileSaver.min.js"></script>
-<script>
-    // Full tax data structure
-    const fullTaxData = {
-        Hotel: {
-            target: 350000,
-            realisasi: 280000,
-            percentage: 80.0
-        },
-        Restoran: {
-            target: 400000,
-            realisasi: 320000,
-            percentage: 80.0
-        },
-        Hiburan: {
-            target: 150000,
-            realisasi: 105000,
-            percentage: 70.0
-        },
-        Reklame: {
-            target: 180000,
-            realisasi: 135000,
-            percentage: 75.0
-        },
-        Parkir: {
-            target: 80000,
-            realisasi: 68000,
-            percentage: 85.0
-        },
-        PBB: {
-            target: 40000,
-            realisasi: 32000,
-            percentage: 80.0
-        }
-    };
-
-    const ctx = document.getElementById('taxChart');
-    let myChart;
-
-    // Get responsive bar thickness based on screen width
-    function getBarThickness() {
-        const width = window.innerWidth;
-        if (width < 400) return 30;
-        if (width < 576) return 40;
-        if (width < 768) return 50;
-        if (width < 992) return 60;
-        return 80;
-    }
-
-    // Get responsive font sizes
-    function getResponsiveFontSizes() {
-        const width = window.innerWidth;
-        if (width < 400) {
-            return { legend: 10, tick: 10 };
-        } else if (width < 576) {
-            return { legend: 11, tick: 11 };
-        } else if (width < 768) {
-            return { legend: 11, tick: 12 };
-        }
-        return { legend: 12, tick: 13 };
-    }
-
-    // Initialize chart
-    function initChart(labels, targetData, realisasiData) {
-        const barThickness = getBarThickness();
-        const fontSizes = getResponsiveFontSizes();
-
-        const data = {
-            labels: labels,
-            datasets: [
-                {
-                    label: 'realisasi',
-                    data: realisasiData,
-                    backgroundColor: '#10B981',
-                    borderRadius: 4,
-                    barThickness: barThickness
-                },
-                {
-                    label: 'target',
-                    data: targetData,
-                    backgroundColor: '#3B82F6',
-                    borderRadius: 4,
-                    barThickness: barThickness
-                }
-            ]
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/exceljs@4.3.0/dist/exceljs.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/file-saver@2.0.5/dist/FileSaver.min.js"></script>
+    <script>
+        // Full tax data structure
+        const fullTaxData = {
+            Hotel: {
+                target: 350000,
+                realisasi: 280000,
+                percentage: 80.0
+            },
+            Restoran: {
+                target: 400000,
+                realisasi: 320000,
+                percentage: 80.0
+            },
+            Hiburan: {
+                target: 150000,
+                realisasi: 105000,
+                percentage: 70.0
+            },
+            Reklame: {
+                target: 180000,
+                realisasi: 135000,
+                percentage: 75.0
+            },
+            Parkir: {
+                target: 80000,
+                realisasi: 68000,
+                percentage: 85.0
+            },
+            PBB: {
+                target: 40000,
+                realisasi: 32000,
+                percentage: 80.0
+            }
         };
 
-        const config = {
-            type: 'bar',
-            data: data,
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                plugins: {
-                    legend: {
-                        display: true,
-                        position: 'bottom',
-                        labels: {
-                            usePointStyle: true,
-                            padding: window.innerWidth < 576 ? 10 : 15,
-                            font: {
-                                size: fontSizes.legend
-                            }
-                        }
+        const ctx = document.getElementById('taxChart');
+        let myChart;
+
+        // Get responsive bar thickness based on screen width
+        function getBarThickness() {
+            const width = window.innerWidth;
+            if (width < 400) return 30;
+            if (width < 576) return 40;
+            if (width < 768) return 50;
+            if (width < 992) return 60;
+            return 80;
+        }
+
+        // Get responsive font sizes
+        function getResponsiveFontSizes() {
+            const width = window.innerWidth;
+            if (width < 400) {
+                return {
+                    legend: 10,
+                    tick: 10
+                };
+            } else if (width < 576) {
+                return {
+                    legend: 11,
+                    tick: 11
+                };
+            } else if (width < 768) {
+                return {
+                    legend: 11,
+                    tick: 12
+                };
+            }
+            return {
+                legend: 12,
+                tick: 13
+            };
+        }
+
+        // Initialize chart
+        function initChart(labels, targetData, realisasiData) {
+            const barThickness = getBarThickness();
+            const fontSizes = getResponsiveFontSizes();
+
+            const data = {
+                labels: labels,
+                datasets: [{
+                        label: 'realisasi',
+                        data: realisasiData,
+                        backgroundColor: '#10B981',
+                        borderRadius: 4,
+                        barThickness: barThickness
                     },
-                    tooltip: {
-                        callbacks: {
-                            label: function(context) {
-                                let label = context.dataset.label || '';
-                                if (label) {
-                                    label += ': ';
-                                }
-                                label += 'Rp ' + new Intl.NumberFormat('id-ID').format(context.parsed.y);
-                                return label;
-                            }
-                        }
+                    {
+                        label: 'target',
+                        data: targetData,
+                        backgroundColor: '#3B82F6',
+                        borderRadius: 4,
+                        barThickness: barThickness
                     }
-                },
-                scales: {
-                    y: {
-                        beginAtZero: true,
-                        grid: {
+                ]
+            };
+
+            const config = {
+                type: 'bar',
+                data: data,
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
                             display: true,
-                            drawBorder: false
+                            position: 'bottom',
+                            labels: {
+                                usePointStyle: true,
+                                padding: window.innerWidth < 576 ? 10 : 15,
+                                font: {
+                                    size: fontSizes.legend
+                                }
+                            }
                         },
-                        ticks: {
-                            font: {
-                                size: fontSizes.tick
-                            },
-                            callback: function(value) {
-                                return new Intl.NumberFormat('id-ID', {
-                                    notation: 'compact',
-                                    compactDisplay: 'short'
-                                }).format(value);
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    let label = context.dataset.label || '';
+                                    if (label) {
+                                        label += ': ';
+                                    }
+                                    label += 'Rp ' + new Intl.NumberFormat('id-ID').format(context.parsed.y);
+                                    return label;
+                                }
                             }
                         }
                     },
-                    x: {
-                        grid: {
-                            display: false
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            grid: {
+                                display: true,
+                                drawBorder: false
+                            },
+                            ticks: {
+                                font: {
+                                    size: fontSizes.tick
+                                },
+                                callback: function(value) {
+                                    return new Intl.NumberFormat('id-ID', {
+                                        notation: 'compact',
+                                        compactDisplay: 'short'
+                                    }).format(value);
+                                }
+                            }
                         },
-                        ticks: {
-                            font: {
-                                size: fontSizes.tick
+                        x: {
+                            grid: {
+                                display: false
+                            },
+                            ticks: {
+                                font: {
+                                    size: fontSizes.tick
+                                }
                             }
                         }
                     }
                 }
-            }
-        };
+            };
 
-        if (myChart) {
-            myChart.destroy();
-        }
-
-        myChart = new Chart(ctx, config);
-        applyThemeToChart();
-    }
-
-    // Handle window resize
-    let resizeTimeout;
-    window.addEventListener('resize', function() {
-        clearTimeout(resizeTimeout);
-        resizeTimeout = setTimeout(function() {
             if (myChart) {
-                filterTaxData();
+                myChart.destroy();
             }
-        }, 250);
-    });
 
-    // Filter tax data function
-    function filterTaxData() {
-        const filterValue = document.getElementById('taxFilter').value;
-        let labels = [];
-        let targetData = [];
-        let realisasiData = [];
-
-        if (filterValue === 'all') {
-            labels = Object.keys(fullTaxData).map(key => {
-                if (key === 'PBB') return 'PBB-P2';
-                return 'Pajak ' + key;
-            });
-            targetData = Object.values(fullTaxData).map(item => item.target);
-            realisasiData = Object.values(fullTaxData).map(item => item.realisasi);
-        } else {
-            const displayName = filterValue === 'PBB' ? 'PBB-P2' : 'Pajak ' + filterValue;
-            labels = [displayName];
-            targetData = [fullTaxData[filterValue].target];
-            realisasiData = [fullTaxData[filterValue].realisasi];
+            myChart = new Chart(ctx, config);
+            applyThemeToChart();
         }
 
-        initChart(labels, targetData, realisasiData);
-        updateTable(filterValue);
-    }
+        // Handle window resize
+        let resizeTimeout;
+        window.addEventListener('resize', function() {
+            clearTimeout(resizeTimeout);
+            resizeTimeout = setTimeout(function() {
+                if (myChart) {
+                    filterTaxData();
+                }
+            }, 250);
+        });
 
-    // Update table function
-    function updateTable(filterValue) {
-        const tableBody = document.getElementById('tableBody');
-        tableBody.innerHTML = '';
+        // Filter tax data function
+        function filterTaxData() {
+            const filterValue = document.getElementById('taxFilter').value;
+            let labels = [];
+            let targetData = [];
+            let realisasiData = [];
 
-        if (filterValue === 'all') {
-            Object.keys(fullTaxData).forEach(taxType => {
-                const tax = fullTaxData[taxType];
-                const displayName = taxType === 'PBB' ? 'PBB-P2' : 'Pajak ' + taxType;
-                
-                const row = `
+            if (filterValue === 'all') {
+                labels = Object.keys(fullTaxData).map(key => {
+                    if (key === 'PBB') return 'PBB-P2';
+                    return 'Pajak ' + key;
+                });
+                targetData = Object.values(fullTaxData).map(item => item.target);
+                realisasiData = Object.values(fullTaxData).map(item => item.realisasi);
+            } else {
+                const displayName = filterValue === 'PBB' ? 'PBB-P2' : 'Pajak ' + filterValue;
+                labels = [displayName];
+                targetData = [fullTaxData[filterValue].target];
+                realisasiData = [fullTaxData[filterValue].realisasi];
+            }
+
+            initChart(labels, targetData, realisasiData);
+            updateTable(filterValue);
+        }
+
+        // Update table function
+        function updateTable(filterValue) {
+            const tableBody = document.getElementById('tableBody');
+            tableBody.innerHTML = '';
+
+            if (filterValue === 'all') {
+                Object.keys(fullTaxData).forEach(taxType => {
+                    const tax = fullTaxData[taxType];
+                    const displayName = taxType === 'PBB' ? 'PBB-P2' : 'Pajak ' + taxType;
+
+                    const row = `
                     <tr>
                         <td class="fw-semibold">${displayName}</td>
                         <td class="text-end">Rp ${tax.target.toLocaleString('id-ID')}</td>
@@ -571,13 +584,13 @@
                         <td class="text-end">${tax.percentage}%</td>
                     </tr>
                 `;
-                tableBody.innerHTML += row;
-            });
-        } else {
-            const tax = fullTaxData[filterValue];
-            const displayName = filterValue === 'PBB' ? 'PBB-P2' : 'Pajak ' + filterValue;
-            
-            const row = `
+                    tableBody.innerHTML += row;
+                });
+            } else {
+                const tax = fullTaxData[filterValue];
+                const displayName = filterValue === 'PBB' ? 'PBB-P2' : 'Pajak ' + filterValue;
+
+                const row = `
                 <tr>
                     <td class="fw-semibold">${displayName}</td>
                     <td class="text-end">Rp ${tax.target.toLocaleString('id-ID')}</td>
@@ -585,291 +598,325 @@
                     <td class="text-end">${tax.percentage}%</td>
                 </tr>
             `;
-            tableBody.innerHTML += row;
-        }
-
-        const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
-        updateTableTheme(isDark);
-    }
-
-    function applyThemeToChart() {
-        const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
-        if (myChart) {
-            myChart.options.scales.y.grid.color = isDark ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.1)';
-            myChart.options.scales.y.ticks.color = isDark ? '#fff' : '#666';
-            myChart.options.scales.x.ticks.color = isDark ? '#fff' : '#666';
-            myChart.options.plugins.legend.labels.color = isDark ? '#fff' : '#666';
-            myChart.update('none');
-        }
-    }
-
-    function updateChartTheme(isDark) {
-        if (myChart) {
-            myChart.options.scales.y.grid.color = isDark ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.1)';
-            myChart.options.scales.y.ticks.color = isDark ? '#fff' : '#666';
-            myChart.options.scales.x.ticks.color = isDark ? '#fff' : '#666';
-            myChart.options.plugins.legend.labels.color = isDark ? '#fff' : '#666';
-            myChart.update('none');
-        }
-    }
-
-    function updateTableTheme(isDark) {
-        const tables = document.querySelectorAll('.table');
-        tables.forEach(table => {
-            if (isDark) {
-                table.classList.add('table-dark');
-            } else {
-                table.classList.remove('table-dark');
+                tableBody.innerHTML += row;
             }
-        });
-    }
 
-    function updateTitlesTheme(isDark) {
-        const chartTitle = document.querySelector('.chart-title');
-        if (chartTitle) {
-            chartTitle.style.color = isDark ? '#fff' : '#333';
+            const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+            updateTableTheme(isDark);
         }
-        
-        const accordionButtons = document.querySelectorAll('.accordion-button');
-        accordionButtons.forEach(button => {
-            button.style.color = isDark ? '#fff' : '#333';
-        });
 
-        const filterLabel = document.querySelector('.filter-label');
-        if (filterLabel) {
-            filterLabel.style.color = isDark ? '#fff' : '#333';
-        }
-    }
-
-    const htmlElement = document.documentElement;
-    const observer = new MutationObserver((mutations) => {
-        mutations.forEach((mutation) => {
-            if (mutation.type === 'attributes' && mutation.attributeName === 'data-theme') {
-                const currentTheme = htmlElement.getAttribute('data-theme');
-                const isDark = currentTheme === 'dark';
-                
-                updateChartTheme(isDark);
-                updateTableTheme(isDark);
-                updateTitlesTheme(isDark);
+        function applyThemeToChart() {
+            const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+            if (myChart) {
+                myChart.options.scales.y.grid.color = isDark ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.1)';
+                myChart.options.scales.y.ticks.color = isDark ? '#fff' : '#666';
+                myChart.options.scales.x.ticks.color = isDark ? '#fff' : '#666';
+                myChart.options.plugins.legend.labels.color = isDark ? '#fff' : '#666';
+                myChart.update('none');
             }
-        });
-    });
+        }
 
-    observer.observe(htmlElement, {
-        attributes: true,
-        attributeFilter: ['data-theme']
-    });
+        function updateChartTheme(isDark) {
+            if (myChart) {
+                myChart.options.scales.y.grid.color = isDark ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.1)';
+                myChart.options.scales.y.ticks.color = isDark ? '#fff' : '#666';
+                myChart.options.scales.x.ticks.color = isDark ? '#fff' : '#666';
+                myChart.options.plugins.legend.labels.color = isDark ? '#fff' : '#666';
+                myChart.update('none');
+            }
+        }
 
-    filterTaxData();
-
-    const initialTheme = htmlElement.getAttribute('data-theme');
-    const isInitialDark = initialTheme === 'dark';
-    updateTitlesTheme(isInitialDark);
-
-    // Export to Excel
-    async function exportToExcel() {
-        const chartCanvas = document.getElementById('taxChart');
-        const chartImage = chartCanvas.toDataURL('image/png').split(',')[1];
-
-        const workbook = new ExcelJS.Workbook();
-        const worksheet = workbook.addWorksheet('Pajak Daerah');
-
-        worksheet.mergeCells('A1:D1');
-        worksheet.getCell('A1').value = 'Laporan Pajak Daerah';
-        worksheet.getCell('A1').font = { size: 16, bold: true };
-        worksheet.getCell('A1').alignment = { vertical: 'middle', horizontal: 'center' };
-        worksheet.getRow(1).height = 30;
-
-        const imageId = workbook.addImage({
-            base64: chartImage,
-            extension: 'png',
-        });
-
-        worksheet.addImage(imageId, {
-            tl: { col: 0, row: 2 },
-            ext: { width: 600, height: 300 }
-        });
-
-        const startRow = 16;
-
-        worksheet.getCell(`A${startRow}`).value = 'Jenis Pajak';
-        worksheet.getCell(`B${startRow}`).value = 'Target';
-        worksheet.getCell(`C${startRow}`).value = 'Realisasi';
-        worksheet.getCell(`D${startRow}`).value = 'Persentase';
-
-        worksheet.getRow(startRow).font = { bold: true };
-        worksheet.getRow(startRow).fill = {
-            type: 'pattern',
-            pattern: 'solid',
-            fgColor: { argb: 'FFE0E0E0' }
-        };
-
-        const table = document.getElementById('taxTable');
-        const rows = table.querySelectorAll('tbody tr');
-        
-        let currentRow = startRow + 1;
-        rows.forEach(row => {
-            const cells = row.querySelectorAll('td');
-            const rowData = [];
-            cells.forEach(cell => {
-                rowData.push(cell.textContent.trim());
+        function updateTableTheme(isDark) {
+            const tables = document.querySelectorAll('.table');
+            tables.forEach(table => {
+                if (isDark) {
+                    table.classList.add('table-dark');
+                } else {
+                    table.classList.remove('table-dark');
+                }
             });
-            
-            worksheet.getRow(currentRow).values = rowData;
-            currentRow++;
+        }
+
+        function updateTitlesTheme(isDark) {
+            const chartTitle = document.querySelector('.chart-title');
+            if (chartTitle) {
+                chartTitle.style.color = isDark ? '#fff' : '#333';
+            }
+
+            const accordionButtons = document.querySelectorAll('.accordion-button');
+            accordionButtons.forEach(button => {
+                button.style.color = isDark ? '#fff' : '#333';
+            });
+
+            const filterLabel = document.querySelector('.filter-label');
+            if (filterLabel) {
+                filterLabel.style.color = isDark ? '#fff' : '#333';
+            }
+        }
+
+        const htmlElement = document.documentElement;
+        const observer = new MutationObserver((mutations) => {
+            mutations.forEach((mutation) => {
+                if (mutation.type === 'attributes' && mutation.attributeName === 'data-theme') {
+                    const currentTheme = htmlElement.getAttribute('data-theme');
+                    const isDark = currentTheme === 'dark';
+
+                    updateChartTheme(isDark);
+                    updateTableTheme(isDark);
+                    updateTitlesTheme(isDark);
+                }
+            });
         });
 
-        worksheet.getColumn(1).width = 30;
-        worksheet.getColumn(2).width = 20;
-        worksheet.getColumn(3).width = 20;
-        worksheet.getColumn(4).width = 15;
+        observer.observe(htmlElement, {
+            attributes: true,
+            attributeFilter: ['data-theme']
+        });
 
-        for (let i = startRow; i < currentRow; i++) {
-            ['A', 'B', 'C', 'D'].forEach(col => {
-                worksheet.getCell(`${col}${i}`).border = {
-                    top: { style: 'thin' },
-                    left: { style: 'thin' },
-                    bottom: { style: 'thin' },
-                    right: { style: 'thin' }
+        filterTaxData();
+
+        const initialTheme = htmlElement.getAttribute('data-theme');
+        const isInitialDark = initialTheme === 'dark';
+        updateTitlesTheme(isInitialDark);
+
+        // Export to Excel
+        async function exportToExcel() {
+            const chartCanvas = document.getElementById('taxChart');
+            const chartImage = chartCanvas.toDataURL('image/png').split(',')[1];
+
+            const workbook = new ExcelJS.Workbook();
+            const worksheet = workbook.addWorksheet('Pajak Daerah');
+
+            worksheet.mergeCells('A1:D1');
+            worksheet.getCell('A1').value = 'Laporan Pajak Daerah';
+            worksheet.getCell('A1').font = {
+                size: 16,
+                bold: true
+            };
+            worksheet.getCell('A1').alignment = {
+                vertical: 'middle',
+                horizontal: 'center'
+            };
+            worksheet.getRow(1).height = 30;
+
+            const imageId = workbook.addImage({
+                base64: chartImage,
+                extension: 'png',
+            });
+
+            worksheet.addImage(imageId, {
+                tl: {
+                    col: 0,
+                    row: 2
+                },
+                ext: {
+                    width: 600,
+                    height: 300
+                }
+            });
+
+            const startRow = 16;
+
+            worksheet.getCell(`A${startRow}`).value = 'Jenis Pajak';
+            worksheet.getCell(`B${startRow}`).value = 'Target';
+            worksheet.getCell(`C${startRow}`).value = 'Realisasi';
+            worksheet.getCell(`D${startRow}`).value = 'Persentase';
+
+            worksheet.getRow(startRow).font = {
+                bold: true
+            };
+            worksheet.getRow(startRow).fill = {
+                type: 'pattern',
+                pattern: 'solid',
+                fgColor: {
+                    argb: 'FFE0E0E0'
+                }
+            };
+
+            const table = document.getElementById('taxTable');
+            const rows = table.querySelectorAll('tbody tr');
+
+            let currentRow = startRow + 1;
+            rows.forEach(row => {
+                const cells = row.querySelectorAll('td');
+                const rowData = [];
+                cells.forEach(cell => {
+                    rowData.push(cell.textContent.trim());
+                });
+
+                worksheet.getRow(currentRow).values = rowData;
+                currentRow++;
+            });
+
+            worksheet.getColumn(1).width = 30;
+            worksheet.getColumn(2).width = 20;
+            worksheet.getColumn(3).width = 20;
+            worksheet.getColumn(4).width = 15;
+
+            for (let i = startRow; i < currentRow; i++) {
+                ['A', 'B', 'C', 'D'].forEach(col => {
+                    worksheet.getCell(`${col}${i}`).border = {
+                        top: {
+                            style: 'thin'
+                        },
+                        left: {
+                            style: 'thin'
+                        },
+                        bottom: {
+                            style: 'thin'
+                        },
+                        right: {
+                            style: 'thin'
+                        }
+                    };
+                });
+            }
+
+            for (let i = startRow; i < currentRow; i++) {
+                worksheet.getCell(`B${i}`).alignment = {
+                    horizontal: 'right'
                 };
+                worksheet.getCell(`C${i}`).alignment = {
+                    horizontal: 'right'
+                };
+                worksheet.getCell(`D${i}`).alignment = {
+                    horizontal: 'right'
+                };
+            }
+
+            const buffer = await workbook.xlsx.writeBuffer();
+            const blob = new Blob([buffer], {
+                type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
             });
+            saveAs(blob, 'Laporan_Pajak_Daerah.xlsx');
         }
 
-        for (let i = startRow; i < currentRow; i++) {
-            worksheet.getCell(`B${i}`).alignment = { horizontal: 'right' };
-            worksheet.getCell(`C${i}`).alignment = { horizontal: 'right' };
-            worksheet.getCell(`D${i}`).alignment = { horizontal: 'right' };
-        }
+        // Export to PDF
+        async function exportToPDF() {
+            const {
+                jsPDF
+            } = window.jspdf;
 
-        const buffer = await workbook.xlsx.writeBuffer();
-        const blob = new Blob([buffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
-        saveAs(blob, 'Laporan_Pajak_Daerah.xlsx');
-    }
+            const accordion = document.getElementById('collapseOne');
+            const wasCollapsed = !accordion.classList.contains('show');
 
-    // Export to PDF
-    async function exportToPDF() {
-        const { jsPDF } = window.jspdf;
-        
-        const accordion = document.getElementById('collapseOne');
-        const wasCollapsed = !accordion.classList.contains('show');
-        
-        if (wasCollapsed) {
-            accordion.classList.add('show');
-        }
+            if (wasCollapsed) {
+                accordion.classList.add('show');
+            }
 
-        await new Promise(resolve => setTimeout(resolve, 300));
+            await new Promise(resolve => setTimeout(resolve, 300));
 
-        const chartCanvas = document.getElementById('taxChart');
-        const chartImage = chartCanvas.toDataURL('image/png', 1.0);
+            const chartCanvas = document.getElementById('taxChart');
+            const chartImage = chartCanvas.toDataURL('image/png', 1.0);
 
-        const table = document.getElementById('taxTable');
-        const tableClone = table.cloneNode(true);
-        tableClone.classList.remove('table-dark');
-        
-        const tempDiv = document.createElement('div');
-        tempDiv.style.position = 'absolute';
-        tempDiv.style.left = '-9999px';
-        tempDiv.style.top = '0';
-        tempDiv.style.width = '800px';
-        tempDiv.style.padding = '20px';
-        tempDiv.style.backgroundColor = 'white';
-        
-        tempDiv.innerHTML = `
+            const table = document.getElementById('taxTable');
+            const tableClone = table.cloneNode(true);
+            tableClone.classList.remove('table-dark');
+
+            const tempDiv = document.createElement('div');
+            tempDiv.style.position = 'absolute';
+            tempDiv.style.left = '-9999px';
+            tempDiv.style.top = '0';
+            tempDiv.style.width = '800px';
+            tempDiv.style.padding = '20px';
+            tempDiv.style.backgroundColor = 'white';
+
+            tempDiv.innerHTML = `
             <h5 style="color: #333; margin-bottom: 20px;">Laporan Pajak Daerah</h5>
             <div style="margin-bottom: 20px;">
                 <img src="${chartImage}" style="width: 100%; height: auto;" />
             </div>
         `;
-        tempDiv.appendChild(tableClone);
-        
-        document.body.appendChild(tempDiv);
+            tempDiv.appendChild(tableClone);
 
-        html2canvas(tempDiv, {
-            scale: 2,
-            backgroundColor: '#ffffff',
-            logging: false
-        }).then(canvas => {
-            const imgData = canvas.toDataURL('image/png');
-            const pdf = new jsPDF('p', 'mm', 'a4');
-            
-            const pdfWidth = pdf.internal.pageSize.getWidth();
-            const pdfHeight = pdf.internal.pageSize.getHeight();
-            const imgWidth = pdfWidth;
-            const imgHeight = (canvas.height * pdfWidth) / canvas.width;
-            
-            let heightLeft = imgHeight;
-            let position = 0;
+            document.body.appendChild(tempDiv);
 
-            pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
-            heightLeft -= pdfHeight;
+            html2canvas(tempDiv, {
+                scale: 2,
+                backgroundColor: '#ffffff',
+                logging: false
+            }).then(canvas => {
+                const imgData = canvas.toDataURL('image/png');
+                const pdf = new jsPDF('p', 'mm', 'a4');
 
-            while (heightLeft > 0) {
-                position = heightLeft - imgHeight;
-                pdf.addPage();
+                const pdfWidth = pdf.internal.pageSize.getWidth();
+                const pdfHeight = pdf.internal.pageSize.getHeight();
+                const imgWidth = pdfWidth;
+                const imgHeight = (canvas.height * pdfWidth) / canvas.width;
+
+                let heightLeft = imgHeight;
+                let position = 0;
+
                 pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
                 heightLeft -= pdfHeight;
-            }
 
-            pdf.save('Laporan_Pajak_Daerah.pdf');
-            
-            document.body.removeChild(tempDiv);
-            if (wasCollapsed) {
-                accordion.classList.remove('show');
-            }
-        });
-    }
+                while (heightLeft > 0) {
+                    position = heightLeft - imgHeight;
+                    pdf.addPage();
+                    pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
+                    heightLeft -= pdfHeight;
+                }
 
-    // Export to PNG
-    async function exportToPNG() {
-        const accordion = document.getElementById('collapseOne');
-        const wasCollapsed = !accordion.classList.contains('show');
-        
-        if (wasCollapsed) {
-            accordion.classList.add('show');
+                pdf.save('Laporan_Pajak_Daerah.pdf');
+
+                document.body.removeChild(tempDiv);
+                if (wasCollapsed) {
+                    accordion.classList.remove('show');
+                }
+            });
         }
 
-        await new Promise(resolve => setTimeout(resolve, 300));
+        // Export to PNG
+        async function exportToPNG() {
+            const accordion = document.getElementById('collapseOne');
+            const wasCollapsed = !accordion.classList.contains('show');
 
-        const chartCanvas = document.getElementById('taxChart');
-        const chartImage = chartCanvas.toDataURL('image/png', 1.0);
+            if (wasCollapsed) {
+                accordion.classList.add('show');
+            }
 
-        const table = document.getElementById('taxTable');
-        const tableClone = table.cloneNode(true);
-        tableClone.classList.remove('table-dark');
-        
-        const tempDiv = document.createElement('div');
-        tempDiv.style.position = 'absolute';
-        tempDiv.style.left = '-9999px';
-        tempDiv.style.top = '0';
-        tempDiv.style.width = '800px';
-        tempDiv.style.padding = '20px';
-        tempDiv.style.backgroundColor = 'white';
-        
-        tempDiv.innerHTML = `
+            await new Promise(resolve => setTimeout(resolve, 300));
+
+            const chartCanvas = document.getElementById('taxChart');
+            const chartImage = chartCanvas.toDataURL('image/png', 1.0);
+
+            const table = document.getElementById('taxTable');
+            const tableClone = table.cloneNode(true);
+            tableClone.classList.remove('table-dark');
+
+            const tempDiv = document.createElement('div');
+            tempDiv.style.position = 'absolute';
+            tempDiv.style.left = '-9999px';
+            tempDiv.style.top = '0';
+            tempDiv.style.width = '800px';
+            tempDiv.style.padding = '20px';
+            tempDiv.style.backgroundColor = 'white';
+
+            tempDiv.innerHTML = `
             <h5 style="color: #333; margin-bottom: 20px;">Laporan Pajak Daerah</h5>
             <div style="margin-bottom: 20px;">
                 <img src="${chartImage}" style="width: 100%; height: auto;" />
             </div>
         `;
-        tempDiv.appendChild(tableClone);
-        
-        document.body.appendChild(tempDiv);
+            tempDiv.appendChild(tableClone);
 
-        html2canvas(tempDiv, {
-            scale: 2,
-            backgroundColor: '#ffffff',
-            logging: false
-        }).then(canvas => {
-            const link = document.createElement('a');
-            link.download = 'Laporan_Pajak_Daerah.png';
-            link.href = canvas.toDataURL('image/png');
-            link.click();
-            
-            document.body.removeChild(tempDiv);
-            if (wasCollapsed) {
-                accordion.classList.remove('show');
-            }
-        });
-    }
-</script>
+            document.body.appendChild(tempDiv);
+
+            html2canvas(tempDiv, {
+                scale: 2,
+                backgroundColor: '#ffffff',
+                logging: false
+            }).then(canvas => {
+                const link = document.createElement('a');
+                link.download = 'Laporan_Pajak_Daerah.png';
+                link.href = canvas.toDataURL('image/png');
+                link.click();
+
+                document.body.removeChild(tempDiv);
+                if (wasCollapsed) {
+                    accordion.classList.remove('show');
+                }
+            });
+        }
+    </script>
 @endpush

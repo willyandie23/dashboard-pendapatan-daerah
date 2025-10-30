@@ -293,12 +293,12 @@
     applyColor(savedColor);
     document
       .querySelector(`.color-picker-btn[data-color="${savedColor}"]`)
-      .classList.add("active");
+      ?.classList.add("active");
   } else {
     // Default (blue)
     document
       .querySelector(`.color-picker-btn[data-color="blue"]`)
-      .classList.add("active");
+      ?.classList.add("active");
   }
   // =========================== Color Schema js End ================================
 

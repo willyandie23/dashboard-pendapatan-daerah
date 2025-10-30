@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\API\AuthController;
 use App\Http\Controllers\API\AppLogController;
 use App\Http\Controllers\API\DocumentController;
+use App\Http\Controllers\API\IdentityController;
 
 Route::get('/user', function (Request $request) {
     return $request->user();
@@ -17,6 +18,10 @@ Route::resource('app-logs', AppLogController::class, ['only' => ['index', 'show'
 
 Route::resource('dokumen', DocumentController::class, ['only' => ['index', 'incrementDownload', 'download']]);
 
+Route::get('/identitas', [IdentityController::class, 'index']);
+
 Route::middleware('auth:api')->group(function () {
     Route::resource('dokumen', DocumentController::class, ['only' => ['store', 'show', 'update', 'destroy']]);
+
+    Route::resource('identitas', IdentityController::class, ['only' => ['store', 'show', 'update', 'destroy']]);
 });
