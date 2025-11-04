@@ -68,6 +68,10 @@
 
         <div class="dashboard-main-body">
 
+            <div class="container-fluid px-3 px-md-4">
+                {{ Breadcrumbs::render() }}
+            </div>
+
             @yield('content')
 
         </div>

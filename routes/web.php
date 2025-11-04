@@ -29,6 +29,7 @@ Route::get('/laporan/penerimaan-opd', [PenerimaanOpdController::class, 'index'])
     ->name('laporan.penerimaan-opd');
 
 Route::get('/dokumen-publish', [DocumentController::class, 'documentPublicShow'])->name('document.index_public');
+Route::post('/dokumen/{id}/download', [DocumentController::class, 'download'])->name('document.download');
 
 Route::middleware('auth', 'role:admin|superadmin')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
@@ -42,7 +43,6 @@ Route::middleware('auth', 'role:admin|superadmin')->group(function () {
     Route::get('/dokumen/create', [DocumentController::class, 'create'])->name('document.create');
     Route::get('/dokumen/{id}/edit', [DocumentController::class, 'edit'])->name('document.edit');
     Route::post('/dokumen', [DocumentController::class, 'store'])->name('document.store');
-    Route::post('/dokumen/{id}/download', [DocumentController::class, 'download'])->name('document.download');
 
     Route::get('/identitas', [IdentityController::class, 'identityShow'])->name('identity.index');
     Route::post('/identitas', [IdentityController::class, 'store'])->name('identity.store');
