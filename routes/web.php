@@ -31,6 +31,11 @@ Route::get('/laporan/penerimaan-opd', [PenerimaanOpdController::class, 'index'])
 Route::get('/dokumen-publish', [DocumentController::class, 'documentPublicShow'])->name('document.index_public');
 Route::post('/dokumen/{id}/download', [DocumentController::class, 'download'])->name('document.download');
 
+Route::get('/api/komposisi-sumber-pendapatan', [DashboardController::class, 'getKomposisiSumberPendapatan']);
+Route::get('/api/komposisi-sumber-pendapatan-bulanan', [DashboardController::class, 'getKomposisiSumberPendapatanBulanan']);
+Route::get('/api/komposisi-sumber-pendapatan-triwulan', [DashboardController::class, 'getKomposisiSumberPendapatanTriwulan']);
+Route::get('/api/komposisi-target-selisih-pendapatan', [DashboardController::class, 'getKomposisiTargetSelisihPendapatan']);
+
 Route::middleware('auth', 'role:admin|superadmin')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');

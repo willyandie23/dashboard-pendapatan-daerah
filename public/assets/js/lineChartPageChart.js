@@ -284,18 +284,210 @@ if (lineDataLabelElement) {
 
 
 // =========================== Double Line Chart Start ===============================
-function createLineChart(chartId, chartColor) {
+// function createLineChart(chartId, chartColor) {
+//     var chartElement = document.querySelector(`#${chartId}`);
+//     if (chartElement) {
+//         var options = {
+//             series: [
+//                 {
+//                     name: 'Target',
+//                     data: [800000, 150000, 90000, 200000, 100000, 330000, 130000, 220000, 80000, 170000, 100000, 150000],
+//                 },
+//                 {
+//                     name: 'Realisasi',
+//                     data: [80000, 240000, 180000, 400000, 180000, 480000, 220000, 380000, 180000, 300000, 200000, 280000],
+//                 },
+//             ],
+//             chart: {
+//                 type: 'line',
+//                 width: '100%',
+//                 height: 264,
+//                 sparkline: {
+//                     enabled: false
+//                 },
+//                 toolbar: {
+//                     show: false
+//                 },
+//                 padding: {
+//                     left: 0,
+//                     right: 0,
+//                     top: 0,
+//                     bottom: 0
+//                 }
+//             },
+//             colors: ['#487FFF', '#FF9F29'],
+//             dataLabels: {
+//                 enabled: false
+//             },
+//             stroke: {
+//                 curve: 'smooth',
+//                 width: 4,
+//                 colors: ["#FF9F29", chartColor],
+//                 lineCap: 'round',
+//             },
+//             grid: {
+//                 show: true,
+//                 borderColor: '#D1D5DB',
+//                 strokeDashArray: 3,
+//                 position: 'back',
+//                 xaxis: {
+//                     lines: {
+//                         show: false
+//                     }
+//                 },   
+//                 yaxis: {
+//                     lines: {
+//                         show: true
+//                     }
+//                 },  
+//                 row: {
+//                     colors: undefined,
+//                     opacity: 0.5
+//                 },  
+//                 column: {
+//                     colors: undefined,
+//                     opacity: 0.5
+//                 },  
+//                 padding: {
+//                     top: 0,
+//                     right: 0,
+//                     bottom: 0,
+//                     left: 0
+//                 },  
+//             },
+//             markers: {
+//                 colors: ["#FF9F29", chartColor],
+//                 strokeWidth: 3,
+//                 size: 0,
+//                 hover: {
+//                     size: 10
+//                 }
+//             },
+//             xaxis: {
+//                 categories: [`Jan`, `Feb`, `Mar`, `Apr`, `Mei`, `Jun`, `Jul`, `Agu`, `Sep`, `Okt`, `Nov`, `Des`],
+//                 tooltip: {
+//                     enabled: false,        
+//                 },
+//                 labels: {
+//                     formatter: function (value) {
+//                         return value;
+//                     },
+//                     style: {
+//                         fontSize: "10px"
+//                     }
+//                 },
+//             },
+//             yaxis: {
+//                 min: 0,
+//                 max: 1000000,
+//                 tickAmount: 4,
+//                 labels: {
+//                     formatter: function (value) {
+//                         return value.toLocaleString();
+//                     },
+//                     style: {
+//                         fontSize: "10px"
+//                     }
+//                 },
+//             },
+//             tooltip: {
+//                 x: {
+//                     format: 'dd/MM/yy HH:mm'
+//                 },
+//             },
+//             legend: {
+//                 show: false
+//             }
+//         };
+
+//         var chart = new ApexCharts(chartElement, options);
+//         chart.render();
+//     }
+// }
+// createLineChart('doubleLineChart', '#487fff');
+
+// Variabel global untuk menyimpan state chart
+let lineChartInstance = null;
+let currentChartMode = 'monthly'; // 'monthly' atau 'quarterly'
+let monthlyData = null;
+let quarterlyData = null;
+
+// Function untuk ambil data bulanan dari API
+async function fetchMonthlyData() {
+    try {
+        const response = await fetch("/api/komposisi-sumber-pendapatan-bulanan", {
+            method: "GET",
+            headers: {
+                "Accept": "application/json"
+            }
+        });
+        const result = await response.json();
+        
+        if (result.status === 200 && Array.isArray(result.data)) {
+            // Filter berdasarkan tahun yang dipilih
+            const year = localStorage.getItem('selectedYear') || new Date().getFullYear();
+            const filteredData = result.data.filter(d => d.tahun == year);
+            
+            monthlyData = {
+                categories: filteredData.map(d => d.bulan),
+                target: filteredData.map(d => d.target),
+                realisasi: filteredData.map(d => d.realisasi)
+            };
+        }
+    } catch (err) {
+        console.error('Error fetching monthly data:', err);
+    }
+}
+
+// Function untuk ambil data triwulan dari API
+async function fetchQuarterlyData() {
+    try {
+        const response = await fetch("/api/komposisi-sumber-pendapatan-triwulan", {
+            method: "GET",
+            headers: {
+                "Accept": "application/json"
+            }
+        });
+        const result = await response.json();
+        
+        if (result.status === 200 && Array.isArray(result.data)) {
+            // Filter berdasarkan tahun yang dipilih
+            const year = localStorage.getItem('selectedYear') || new Date().getFullYear();
+            const filteredData = result.data.filter(d => d.tahun == year);
+            
+            quarterlyData = {
+                categories: filteredData.map(d => d.triwulan.trim()), // Ubah dari nama_triwulan ke triwulan, dan trim() untuk hapus spasi
+                target: filteredData.map(d => d.target),
+                realisasi: filteredData.map(d => d.realisasi)
+            };
+            
+            console.log('Quarterly Data:', quarterlyData); // Debug
+        }
+    } catch (err) {
+        console.error('Error fetching quarterly data:', err);
+    }
+}
+
+function createLineChart(chartId, chartColor, mode = 'monthly') {
     var chartElement = document.querySelector(`#${chartId}`);
     if (chartElement) {
+        // Pilih data berdasarkan mode
+        const data = mode === 'monthly' ? monthlyData : quarterlyData;
+        
+        if (!data) {
+            chartElement.innerHTML = "<p>Data tidak tersedia</p>";
+            return;
+        }
+        
         var options = {
             series: [
                 {
                     name: 'Target',
-                    data: [800000, 150000, 90000, 200000, 100000, 330000, 130000, 220000, 80000, 170000, 100000, 150000],
+                    data: data.target,
                 },
                 {
                     name: 'Realisasi',
-                    data: [80000, 240000, 180000, 400000, 180000, 480000, 220000, 380000, 180000, 300000, 200000, 280000],
+                    data: data.realisasi,
                 },
             ],
             chart: {
@@ -322,7 +514,7 @@ function createLineChart(chartId, chartColor) {
             stroke: {
                 curve: 'smooth',
                 width: 4,
-                colors: ["#FF9F29", chartColor],
+                colors: ["#487FFF", "#FF9F29"],
                 lineCap: 'round',
             },
             grid: {
@@ -356,7 +548,7 @@ function createLineChart(chartId, chartColor) {
                 },  
             },
             markers: {
-                colors: ["#FF9F29", chartColor],
+                colors: ["#487FFF", "#FF9F29"],
                 strokeWidth: 3,
                 size: 0,
                 hover: {
@@ -364,7 +556,7 @@ function createLineChart(chartId, chartColor) {
                 }
             },
             xaxis: {
-                categories: [`Jan`, `Feb`, `Mar`, `Apr`, `Mei`, `Jun`, `Jul`, `Agu`, `Sep`, `Okt`, `Nov`, `Des`],
+                categories: data.categories,
                 tooltip: {
                     enabled: false,        
                 },
@@ -379,11 +571,10 @@ function createLineChart(chartId, chartColor) {
             },
             yaxis: {
                 min: 0,
-                max: 1000000,
                 tickAmount: 4,
                 labels: {
                     formatter: function (value) {
-                        return value.toLocaleString();
+                        return (value / 1000000000).toFixed(0) + 'M';
                     },
                     style: {
                         fontSize: "10px"
@@ -391,20 +582,95 @@ function createLineChart(chartId, chartColor) {
                 },
             },
             tooltip: {
-                x: {
-                    format: 'dd/MM/yy HH:mm'
-                },
+                y: {
+                    formatter: function (value) {
+                        return new Intl.NumberFormat('id-ID', {
+                            style: 'currency',
+                            currency: 'IDR',
+                            minimumFractionDigits: 0,
+                            maximumFractionDigits: 0
+                        }).format(value);
+                    }
+                }
             },
             legend: {
                 show: false
             }
         };
 
-        var chart = new ApexCharts(chartElement, options);
-        chart.render();
+        // Destroy chart lama jika ada
+        if (lineChartInstance) {
+            lineChartInstance.destroy();
+        }
+
+        lineChartInstance = new ApexCharts(chartElement, options);
+        lineChartInstance.render();
     }
 }
-createLineChart('doubleLineChart', '#487fff');
+
+// Function untuk update button active state
+function updateButtonState(mode) {
+    const monthlyBtn = document.getElementById('monthlyButton');
+    const quarterlyBtn = document.getElementById('quarterlyButton');
+
+    if (mode === 'monthly') {
+        monthlyBtn.classList.remove('btn-outline-info');
+        monthlyBtn.classList.add('btn-info');
+        quarterlyBtn.classList.remove('btn-info');
+        quarterlyBtn.classList.add('btn-outline-info');
+    } else {
+        quarterlyBtn.classList.remove('btn-outline-info');
+        quarterlyBtn.classList.add('btn-info');
+        monthlyBtn.classList.remove('btn-info');
+        monthlyBtn.classList.add('btn-outline-info');
+    }
+}
+
+// Function untuk handle button click
+function setupLineChartButtons() {
+    const monthlyBtn = document.getElementById('monthlyButton');
+    const quarterlyBtn = document.getElementById('quarterlyButton');
+
+    if (monthlyBtn) {
+        monthlyBtn.addEventListener('click', function() {
+            currentChartMode = 'monthly';
+            updateButtonState('monthly');
+            createLineChart('doubleLineChart', '#487fff', 'monthly');
+        });
+    }
+
+    if (quarterlyBtn) {
+        quarterlyBtn.addEventListener('click', function() {
+            currentChartMode = 'quarterly';
+            updateButtonState('quarterly');
+            createLineChart('doubleLineChart', '#487fff', 'quarterly');
+        });
+    }
+}
+
+// Function untuk reload chart saat tahun berubah
+async function renderLineChart(year) {
+    await fetchMonthlyData();
+    await fetchQuarterlyData();
+    createLineChart('doubleLineChart', '#487fff', currentChartMode);
+}
+
+// Initialize chart dan button saat page load
+document.addEventListener('DOMContentLoaded', async function() {
+    await fetchMonthlyData();
+    await fetchQuarterlyData();
+    
+    // SET BUTTON BULANAN SEBAGAI DEFAULT AKTIF
+    updateButtonState('monthly');
+    
+    // RENDER CHART BULANAN
+    createLineChart('doubleLineChart', '#487fff', 'monthly');
+    
+    // SETUP BUTTON LISTENERS
+    setupLineChartButtons();
+});
+
+
 // =========================== Double Line Chart End ===============================
 
 

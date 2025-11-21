@@ -171,6 +171,9 @@
         });
     </script>
 
+    <!-- Get Years Script -->
+    <script src="{{ asset('assets/js/getAvailableYears.js') }}"></script>
+
     @stack('scripts')
 </body>
 

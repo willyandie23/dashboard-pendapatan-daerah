@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Dashboard')
+@section('title', 'Dashboard Pendapatan Daerah Kab. Katingan')
 
 @push('styles')
     <style>
@@ -74,7 +74,7 @@
 
     <div class="container-fluid px-3 px-md-4">
         <!-- Statistics Cards -->
-        <div class="row g-3 g-md-4">
+        {{-- <div class="row g-3 g-md-4">
             <div class="col-6 col-md-3">
                 <div class="card">
                     <div class="custom-header">Target</div>
@@ -107,7 +107,42 @@
                     </div>
                 </div>
             </div>
+        </div> --}}
+        <div class="row g-3 g-md-4">
+            <div class="col-6 col-md-3">
+                <div class="card card-target">
+                    <div class="custom-header">Target</div>
+                    <div class="custom-body">
+                        <p class="text-truncate">Memuat...</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-6 col-md-3">
+                <div class="card card-realisasi">
+                    <div class="custom-header">Realisasi</div>
+                    <div class="custom-body">
+                        <p class="text-truncate">Memuat...</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-6 col-md-3">
+                <div class="card card-persentase">
+                    <div class="custom-header">Persentase</div>
+                    <div class="custom-body">
+                        <p>Memuat...</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-6 col-md-3">
+                <div class="card card-selisih">
+                    <div class="custom-header">Selisih</div>
+                    <div class="custom-body">
+                        <p class="text-truncate">Memuat...</p>
+                    </div>
+                </div>
+            </div>
         </div>
+
 
         <!-- Charts Row -->
         <div class="row chart-container g-3 g-md-4">
@@ -142,8 +177,8 @@
                         class="card-header bg-base py-3 py-md-4 px-3 px-md-4 d-flex flex-column flex-sm-row justify-content-between align-items-start align-items-sm-center gap-2">
                         <h6 class="text-lg fw-semibold mb-0">Tren Realisasi vs Target</h6>
                         <div class="d-flex gap-2">
-                            <button class="btn btn-outline-info btn-sm" id="monthlyButton">Bulanan</button>
-                            <button class="btn btn-outline-info btn-sm" id="quarterlyButton">Triwulan</button>
+                            <button class="btn btn-outline-danger btn-sm" id="monthlyButton">Bulanan</button>
+                            <button class="btn btn-outline-danger btn-sm" id="quarterlyButton">Triwulan</button>
                         </div>
                     </div>
                     <div class="card-body p-3 p-md-4">
@@ -160,4 +195,15 @@
     <script src="{{ asset('assets/js/pieChartPageChart.js') }}"></script>
     <script src="{{ asset('assets/js/lineChartPageChart.js') }}"></script>
     <script src="{{ asset('assets/js/columnChartPageChart.js') }}"></script>
+    <script src="{{ asset('assets/js/dashboardCards.js') }}"></script>
+
+    <script>
+        window.refreshCharts = function(year) {
+            console.log('Refreshing charts for year: ' + year);
+            renderDashboardCards(year);
+            renderPieChart(year);
+            renderColumnChart(year);
+            renderLineChart(year);
+        };
+    </script>
 @endpush

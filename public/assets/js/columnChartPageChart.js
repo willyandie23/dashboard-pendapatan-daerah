@@ -1,72 +1,314 @@
 // ================================ Column Charts Chart Start ================================ 
-var columnChartElement = document.querySelector("#columnChart");
-if (columnChartElement) {
-    var options = {
-        series: [{
-            name: 'Target',
-            data: [20000, 16000, 14000, 25000, 45000, 18000, 28000, 11000, 26000, 48000, 18000, 22000]
-        },{
-            name: 'Realisasi',
-            data: [15000, 18000, 19000, 20000, 35000, 20000, 18000, 13000, 18000, 38000, 14000, 16000]
-        }],
-        colors: ['#487FFF', '#FF9F29'],
-        labels: ['Active', 'New', 'Total'],
-        legend: {
-            show: false 
-        },
-        chart: {
-            type: 'bar',
-            height: 264,
-            toolbar: {
-                show: false
-            },
-        },
-        grid: {
-            show: true,
-            borderColor: '#D1D5DB',
-            strokeDashArray: 4,
-            position: 'back',
-        },
-        plotOptions: {
-            bar: {
-                borderRadius: 4,
-                columnWidth: 10,
-            },
-        },
-        dataLabels: {
-            enabled: false
-        },
-        stroke: {
-            show: true,
-            width: 2,
-            colors: ['transparent']
-        },
-        xaxis: {
-            categories: ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agu', 'Sep', 'Okt', 'Nov', 'Des'],
-        },
-        yaxis: {
-            labels: {
-                formatter: function (value) {
-                    return (value / 1000).toFixed(0) + 'Jt';
-                }
-            }
-        },
-        tooltip: {
-            y: {
-                formatter: function (value) {
-                    return value / 1000 + 'Juta';
-                }
-            }
-        },
-        fill: {
-            opacity: 1,
-            width: 18,
-        },
-    };
+// Template Chart dengan data statis
+// var columnChartElement = document.querySelector("#columnChart");
+// if (columnChartElement) {
+//     var options = {
+//         series: [{
+//             name: 'Target',
+//             data: [20000, 16000, 14000, 25000, 45000, 18000, 28000, 11000, 26000, 48000, 18000, 22000]
+//         },{
+//             name: 'Realisasi',
+//             data: [15000, 18000, 19000, 20000, 35000, 20000, 18000, 13000, 18000, 38000, 14000, 16000]
+//         }],
+//         colors: ['#487FFF', '#FF9F29'],
+//         labels: ['Active', 'New', 'Total'],
+//         legend: {
+//             show: false 
+//         },
+//         chart: {
+//             type: 'bar',
+//             height: 264,
+//             toolbar: {
+//                 show: false
+//             },
+//         },
+//         grid: {
+//             show: true,
+//             borderColor: '#D1D5DB',
+//             strokeDashArray: 4,
+//             position: 'back',
+//         },
+//         plotOptions: {
+//             bar: {
+//                 borderRadius: 4,
+//                 columnWidth: 10,
+//             },
+//         },
+//         dataLabels: {
+//             enabled: false
+//         },
+//         stroke: {
+//             show: true,
+//             width: 2,
+//             colors: ['transparent']
+//         },
+//         xaxis: {
+//             categories: ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agu', 'Sep', 'Okt', 'Nov', 'Des'],
+//         },
+//         yaxis: {
+//             labels: {
+//                 formatter: function (value) {
+//                     return (value / 1000).toFixed(0) + 'Jt';
+//                 }
+//             }
+//         },
+//         tooltip: {
+//             y: {
+//                 formatter: function (value) {
+//                     return value / 1000 + 'Juta';
+//                 }
+//             }
+//         },
+//         fill: {
+//             opacity: 1,
+//             width: 18,
+//         },
+//     };
 
-    var chart = new ApexCharts(columnChartElement, options);
-    chart.render();
+//     var chart = new ApexCharts(columnChartElement, options);
+//     chart.render();
+// }
+
+// Chart dengan data dinamis dari API
+// var columnChartElement = document.querySelector("#columnChart");
+// if (columnChartElement) {
+//     fetch("/api/komposisi-sumber-pendapatan-bulanan", {
+//         method: "GET",
+//         headers: {
+//             "Accept": "application/json"
+//         }
+//     })
+//     .then(response => response.json())
+//     .then(result => {
+//         if (result.status === 200 && Array.isArray(result.data)) {
+//             // Extract data dari API
+//             var targetData = result.data.map(d => d.target);
+//             var realisasiData = result.data.map(d => d.realisasi);
+//             var bulanLabels = result.data.map(d => d.bulan);
+
+//             // Fungsi helper untuk format Rupiah
+//             function formatRupiah(value) {
+//                 return new Intl.NumberFormat('id-ID', {
+//                     style: 'currency',
+//                     currency: 'IDR',
+//                     minimumFractionDigits: 0,
+//                     maximumFractionDigits: 0
+//                 }).format(value);
+//             }
+
+//             // Fungsi helper untuk format singkat (Miliar/Juta)
+//             function formatSingkat(value) {
+//                 if (value >= 1000000000) {
+//                     return (value / 1000000000).toFixed(0) + 'M';
+//                 } else if (value >= 1000000) {
+//                     return (value / 1000000).toFixed(0) + 'Jt';
+//                 } else {
+//                     return (value / 1000).toFixed(0) + 'Rb';
+//                 }
+//             }
+
+//             var options = {
+//                 series: [{
+//                     name: 'Target',
+//                     data: targetData
+//                 }, {
+//                     name: 'Realisasi',
+//                     data: realisasiData
+//                 }],
+//                 colors: ['#487FFF', '#FF9F29'],
+//                 legend: {
+//                     show: true,
+//                     position: 'top'
+//                 },
+//                 chart: {
+//                     type: 'bar',
+//                     height: 264,
+//                     toolbar: {
+//                         show: false
+//                     },
+//                 },
+//                 grid: {
+//                     show: true,
+//                     borderColor: '#D1D5DB',
+//                     strokeDashArray: 4,
+//                     position: 'back',
+//                 },
+//                 plotOptions: {
+//                     bar: {
+//                         borderRadius: 4,
+//                         columnWidth: '70%',
+//                     },
+//                 },
+//                 dataLabels: {
+//                     enabled: false
+//                 },
+//                 stroke: {
+//                     show: true,
+//                     width: 2,
+//                     colors: ['transparent']
+//                 },
+//                 xaxis: {
+//                     categories: bulanLabels,
+//                 },
+//                 yaxis: {
+//                     labels: {
+//                         formatter: function (value) {
+//                             return formatSingkat(value);
+//                         }
+//                     }
+//                 },
+//                 tooltip: {
+//                     y: {
+//                         formatter: function (value) {
+//                             return formatRupiah(value);
+//                         }
+//                     }
+//                 },
+//                 fill: {
+//                     opacity: 1,
+//                 },
+//             };
+
+//             var chart = new ApexCharts(columnChartElement, options);
+//             chart.render();
+//         }
+//     })
+//     .catch(err => {
+//         console.error('Error:', err);
+//         columnChartElement.innerHTML = "<p>Gagal mengambil data</p>";
+//     });
+// }
+
+// Chart dengan data dinamis dari API berdasarkan tahun yang dipilih
+function renderColumnChart(year = null) {
+    // Jika year tidak diberikan, gunakan tahun dari localStorage atau tahun terbaru
+    if (year === null || year === undefined) {
+        year = localStorage.getItem('selectedYear') || currentYear || '2025';
+    }
+    
+    var columnChartElement = document.querySelector("#columnChart");
+    if (columnChartElement) {
+        fetch("/api/komposisi-sumber-pendapatan-bulanan", {
+            method: "GET",
+            headers: {
+                "Accept": "application/json"
+            }
+        })
+        .then(response => response.json())
+        .then(result => {
+            if (result.status === 200 && Array.isArray(result.data)) {
+                // Filter data berdasarkan tahun yang diberikan
+                const filteredData = result.data.filter(d => d.tahun == year);
+
+                if (filteredData.length === 0) {
+                    columnChartElement.innerHTML = "<p class='text-center text-muted'>Data tidak tersedia untuk tahun " + year + "</p>";
+                    return;
+                }
+
+                var targetData = filteredData.map(d => d.target);
+                var realisasiData = filteredData.map(d => d.realisasi);
+                var bulanLabels = filteredData.map(d => d.bulan);
+
+                function formatRupiah(value) {
+                    return new Intl.NumberFormat('id-ID', {
+                        style: 'currency',
+                        currency: 'IDR',
+                        minimumFractionDigits: 0,
+                        maximumFractionDigits: 0
+                    }).format(value);
+                }
+
+                function formatSingkat(value) {
+                    if (value >= 1000000000) {
+                        return (value / 1000000000).toFixed(0) + 'M';
+                    } else if (value >= 1000000) {
+                        return (value / 1000000).toFixed(0) + 'Jt';
+                    } else {
+                        return (value / 1000).toFixed(0) + 'Rb';
+                    }
+                }
+
+                var options = {
+                    series: [{
+                        name: 'Target',
+                        data: targetData
+                    }, {
+                        name: 'Realisasi',
+                        data: realisasiData
+                    }],
+                    colors: ['#487FFF', '#FF9F29'],
+                    legend: {
+                        show: true,
+                        position: 'top'
+                    },
+                    chart: {
+                        type: 'bar',
+                        height: 264,
+                        toolbar: {
+                            show: false
+                        },
+                    },
+                    grid: {
+                        show: true,
+                        borderColor: '#D1D5DB',
+                        strokeDashArray: 4,
+                        position: 'back',
+                    },
+                    plotOptions: {
+                        bar: {
+                            borderRadius: 4,
+                            columnWidth: '70%',
+                        },
+                    },
+                    dataLabels: {
+                        enabled: false
+                    },
+                    stroke: {
+                        show: true,
+                        width: 2,
+                        colors: ['transparent']
+                    },
+                    xaxis: {
+                        categories: bulanLabels,
+                    },
+                    yaxis: {
+                        labels: {
+                            formatter: function (value) {
+                                return formatSingkat(value);
+                            }
+                        }
+                    },
+                    tooltip: {
+                        y: {
+                            formatter: function (value) {
+                                return formatRupiah(value);
+                            }
+                        }
+                    },
+                    fill: {
+                        opacity: 1,
+                    },
+                };
+
+                if (window.columnChartInstance) {
+                    window.columnChartInstance.destroy();
+                }
+
+                window.columnChartInstance = new ApexCharts(columnChartElement, options);
+                window.columnChartInstance.render();
+            }
+        })
+        .catch(err => {
+            console.error('Error:', err);
+            columnChartElement.innerHTML = "<p class='text-danger'>Gagal mengambil data</p>";
+        });
+    }
 }
+
+// Panggil saat page load dengan tahun dinamis
+renderColumnChart();
+
+
 // ================================ Column Charts Chart End ================================ 
 
 
@@ -181,7 +423,7 @@ if (columnGroupBarChartElement) {
 // ================================ Column with Group Label chart End ================================ 
 
 
-  
+
 // ================================ Group Column Bar chart Start ================================ 
 var groupColumnBarChartElement = document.querySelector("#groupColumnBarChart");
 if (groupColumnBarChartElement) {
