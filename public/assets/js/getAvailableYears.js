@@ -25,6 +25,8 @@ async function getAvailableYears() {
             } else {
                 currentYear = localStorage.getItem('selectedYear') || availableYears[0];
             }
+
+            availableYears.push('2024');
             
             return availableYears;
         }

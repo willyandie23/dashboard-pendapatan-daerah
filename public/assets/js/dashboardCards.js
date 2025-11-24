@@ -45,6 +45,21 @@ function renderDashboardCards(year = null) {
                     formatRupiah(filteredData.selisih);
             } else {
                 console.warn('Data tidak ditemukan untuk tahun:', year);
+
+                document.querySelector('.card-target .custom-body p').textContent = 
+                    '-';
+                
+                // Update Realisasi
+                document.querySelector('.card-realisasi .custom-body p').textContent = 
+                    '-';
+                
+                // Update Persentase
+                document.querySelector('.card-persentase .custom-body p').textContent = 
+                    '-';
+                
+                // Update Selisih
+                document.querySelector('.card-selisih .custom-body p').textContent = 
+                    '-';
             }
         }
     })
@@ -54,6 +69,6 @@ function renderDashboardCards(year = null) {
 }
 
 // Panggil saat page load
-document.addEventListener('DOMContentLoaded', function() {
-    renderDashboardCards();
-});
+renderDashboardCards();
+// document.addEventListener('DOMContentLoaded', function() {
+// });

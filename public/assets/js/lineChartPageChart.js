@@ -408,7 +408,7 @@ if (lineDataLabelElement) {
 
 // Variabel global untuk menyimpan state chart
 let lineChartInstance = null;
-let currentChartMode = 'monthly'; // 'monthly' atau 'quarterly'
+let currentChartMode = 'monthly';
 let monthlyData = null;
 let quarterlyData = null;
 
@@ -456,12 +456,12 @@ async function fetchQuarterlyData() {
             const filteredData = result.data.filter(d => d.tahun == year);
             
             quarterlyData = {
-                categories: filteredData.map(d => d.triwulan.trim()), // Ubah dari nama_triwulan ke triwulan, dan trim() untuk hapus spasi
+                categories: filteredData.map(d => d.triwulan.trim()),
                 target: filteredData.map(d => d.target),
                 realisasi: filteredData.map(d => d.realisasi)
             };
             
-            console.log('Quarterly Data:', quarterlyData); // Debug
+            // console.log('Quarterly Data:', quarterlyData);
         }
     } catch (err) {
         console.error('Error fetching quarterly data:', err);

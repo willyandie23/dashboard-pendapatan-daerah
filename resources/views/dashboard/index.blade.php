@@ -74,40 +74,6 @@
 
     <div class="container-fluid px-3 px-md-4">
         <!-- Statistics Cards -->
-        {{-- <div class="row g-3 g-md-4">
-            <div class="col-6 col-md-3">
-                <div class="card">
-                    <div class="custom-header">Target</div>
-                    <div class="custom-body">
-                        <p class="text-truncate">Rp 5.000.000</p>
-                    </div>
-                </div>
-            </div>
-            <div class="col-6 col-md-3">
-                <div class="card">
-                    <div class="custom-header">Realisasi</div>
-                    <div class="custom-body">
-                        <p class="text-truncate">Rp 3.200.000</p>
-                    </div>
-                </div>
-            </div>
-            <div class="col-6 col-md-3">
-                <div class="card">
-                    <div class="custom-header">Persentase</div>
-                    <div class="custom-body">
-                        <p>64.0%</p>
-                    </div>
-                </div>
-            </div>
-            <div class="col-6 col-md-3">
-                <div class="card">
-                    <div class="custom-header">Selisih</div>
-                    <div class="custom-body">
-                        <p class="text-truncate">Rp 1.800.000</p>
-                    </div>
-                </div>
-            </div>
-        </div> --}}
         <div class="row g-3 g-md-4">
             <div class="col-6 col-md-3">
                 <div class="card card-target">
@@ -192,10 +158,10 @@
 @endsection
 
 @push('scripts')
-    <script src="{{ asset('assets/js/pieChartPageChart.js') }}"></script>
-    <script src="{{ asset('assets/js/lineChartPageChart.js') }}"></script>
-    <script src="{{ asset('assets/js/columnChartPageChart.js') }}"></script>
     <script src="{{ asset('assets/js/dashboardCards.js') }}"></script>
+    <script src="{{ asset('assets/js/pieChartPageChart.js') }}"></script>
+    <script src="{{ asset('assets/js/columnChartPageChart.js') }}"></script>
+    <script src="{{ asset('assets/js/lineChartPageChart.js') }}"></script>
 
     <script>
         window.refreshCharts = function(year) {

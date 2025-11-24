@@ -203,6 +203,8 @@ function renderColumnChart(year = null) {
                 if (filteredData.length === 0) {
                     columnChartElement.innerHTML = "<p class='text-center text-muted'>Data tidak tersedia untuk tahun " + year + "</p>";
                     return;
+                } else {
+                    columnChartElement.innerHTML = "";
                 }
 
                 var targetData = filteredData.map(d => d.target);
