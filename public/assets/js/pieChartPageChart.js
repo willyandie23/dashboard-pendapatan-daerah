@@ -144,7 +144,7 @@
 function renderPieChart(year = null) {
     // Jika year tidak diberikan, gunakan tahun dari localStorage atau tahun terbaru
     if (year === null || year === undefined) {
-        year = localStorage.getItem('selectedYear') || currentYear || '2025';
+        year = localStorage.getItem('selectedYear') || currentYear;
     }
     
     var pieChartElement = document.querySelector("#pieChart");

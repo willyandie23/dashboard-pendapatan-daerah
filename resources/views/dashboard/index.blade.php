@@ -36,6 +36,54 @@
             margin-top: 0px;
         }
 
+        /* === OVERLAY LOADING BESAR (seperti modal) === */
+        #globalDashboardLoader {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(5px);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+            transition: opacity 0.4s ease, visibility 0.4s ease;
+        }
+
+        #globalDashboardLoader.hidden {
+            opacity: 0;
+            visibility: hidden;
+        }
+
+        .loader-spinner {
+            width: 60px;
+            height: 60px;
+            border: 6px solid #f3f3f3;
+            border-top: 6px solid #e74c3c;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-bottom: 20px;
+        }
+
+        .loader-text {
+            font-size: 1.1rem;
+            color: #2c3e50;
+            font-weight: 500;
+        }
+
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
         /* Responsive adjustments */
         @media (max-width: 767.98px) {
             .custom-header {
@@ -60,6 +108,10 @@
             .chart-container {
                 margin-top: 5px;
             }
+
+            .loader-text {
+                font-size: 1rem;
+            }
         }
 
         @media (max-width: 575.98px) {
@@ -71,6 +123,12 @@
 @endpush
 
 @section('content')
+
+    <!-- Overlay Loading Besar (muncul saat pertama load & refresh) -->
+    <div id="globalDashboardLoader">
+        <div class="loader-spinner"></div>
+        <div class="loader-text">Memuat Dashboard...</div>
+    </div>
 
     <div class="container-fluid px-3 px-md-4">
         <!-- Statistics Cards -->
@@ -108,7 +166,6 @@
                 </div>
             </div>
         </div>
-
 
         <!-- Charts Row -->
         <div class="row chart-container g-3 g-md-4">
@@ -154,7 +211,6 @@
             </div>
         </div>
     </div>
-
 @endsection
 
 @push('scripts')
@@ -164,12 +220,49 @@
     <script src="{{ asset('assets/js/lineChartPageChart.js') }}"></script>
 
     <script>
-        window.refreshCharts = function(year) {
+        // Fungsi untuk menyembunyikan overlay loading
+        function hideGlobalLoader() {
+            const loader = document.getElementById('globalDashboardLoader');
+            if (loader) {
+                loader.classList.add('hidden');
+                setTimeout(() => {
+                    loader.style.display = 'none';
+                }, 400);
+            }
+        }
+
+        // Fungsi untuk menampilkan kembali loader (saat refresh)
+        function showGlobalLoader() {
+            const loader = document.getElementById('globalDashboardLoader');
+            if (loader) {
+                loader.style.display = 'flex';
+                setTimeout(() => loader.classList.remove('hidden'), 10);
+            }
+        }
+
+        // Refresh semua data
+        window.refreshCharts = function(year = new Date().getFullYear()) {
             console.log('Refreshing charts for year: ' + year);
-            renderDashboardCards(year);
-            renderPieChart(year);
-            renderColumnChart(year);
-            renderLineChart(year);
+
+            // Tampilkan loader lagi kalau user ganti tahun
+            showGlobalLoader();
+
+            Promise.allSettled([
+                renderDashboardCards(year),
+                renderPieChart(year),
+                renderColumnChart(year),
+                renderLineChart(year)
+            ]).then(() => {
+                hideGlobalLoader();
+            }).catch(err => {
+                console.error('Error loading dashboard:', err);
+                hideGlobalLoader();
+            });
         };
+
+        // Jalankan otomatis saat halaman pertama kali load
+        document.addEventListener('DOMContentLoaded', () => {
+            refreshCharts();
+        });
     </script>
 @endpush

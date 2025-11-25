@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Foundation\Application;
+use App\Http\Middleware\TrackUniqueVisitor;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
 
@@ -18,6 +19,11 @@ return Application::configure(basePath: dirname(__DIR__))
             'role_or_permission' => \Spatie\Permission\Middleware\RoleOrPermissionMiddleware::class,
             'auth:api' => \Laravel\Passport\Http\Middleware\CheckClientCredentials::class
             // 'auth:api' => \Laravel\Passport\Http\Middleware\EnsureClientIsResourceOwner::class
+        ]);
+
+        // Tracking Visitor Webiste Middleware
+        $middleware->web(append: [
+            TrackUniqueVisitor::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {

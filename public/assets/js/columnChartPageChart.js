@@ -183,7 +183,7 @@
 function renderColumnChart(year = null) {
     // Jika year tidak diberikan, gunakan tahun dari localStorage atau tahun terbaru
     if (year === null || year === undefined) {
-        year = localStorage.getItem('selectedYear') || currentYear || '2025';
+        year = localStorage.getItem('selectedYear') || currentYear;
     }
     
     var columnChartElement = document.querySelector("#columnChart");
@@ -241,7 +241,7 @@ function renderColumnChart(year = null) {
                     colors: ['#487FFF', '#FF9F29'],
                     legend: {
                         show: true,
-                        position: 'top'
+                        position: 'bottom'
                     },
                     chart: {
                         type: 'bar',

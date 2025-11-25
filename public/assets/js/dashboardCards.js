@@ -12,7 +12,7 @@ function formatRupiah(angka) {
 function renderDashboardCards(year = null) {
     // Jika year tidak diberikan, gunakan tahun dari localStorage
     if (year === null || year === undefined) {
-        year = localStorage.getItem('selectedYear') || currentYear || '2025';
+        year = localStorage.getItem('selectedYear') || currentYear;
     }
     
     fetch("/api/komposisi-target-selisih-pendapatan", {

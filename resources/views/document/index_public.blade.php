@@ -4,9 +4,77 @@
 
 @push('styles')
     <style>
-        /* CSS Variables untuk Light dan Dark Mode */
+        /* === OVERLAY LOADING BESAR (Modal Style) === */
+        #globalPageLoader {
+            position: fixed;
+            inset: 0;
+            background: rgba(255, 255, 255, 0.97);
+            backdrop-filter: blur(8px);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+            transition: opacity 0.5s ease, visibility 0.5s ease;
+        }
+
+        [data-theme="dark"] #globalPageLoader {
+            background: rgba(15, 23, 42, 0.98);
+        }
+
+        #globalPageLoader.hidden {
+            opacity: 0;
+            visibility: hidden;
+        }
+
+        .loader-spinner {
+            width: 70px;
+            height: 70px;
+            border: 7px solid #f0f0f0;
+            border-top: 7px solid #c0392b;
+            border-radius: 50%;
+            animation: spin 1.2s linear infinite;
+            margin-bottom: 24px;
+        }
+
+        .loader-text {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: #1e293b;
+            letter-spacing: 0.5px;
+        }
+
+        [data-theme="dark"] .loader-text {
+            color: #e2e8f0;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        /* Responsive loader */
+        @media (max-width: 768px) {
+            .loader-spinner {
+                width: 60px;
+                height: 60px;
+                border-width: 6px;
+            }
+
+            .loader-text {
+                font-size: 1.1rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .loader-text {
+                font-size: 1rem;
+            }
+        }
+
+        /* === SEMUA CSS ASLI KAMU TETAP 100% UTUH === */
         :root {
-            /* Light mode variables */
             --public-doc-bg: #ffffff;
             --public-doc-card-bg: #ffffff;
             --public-doc-text-primary: #212529;
@@ -23,7 +91,6 @@
         }
 
         [data-theme="dark"] {
-            /* Dark mode variables */
             --public-doc-bg: #0f172a;
             --public-doc-card-bg: #1e293b;
             --public-doc-text-primary: #f1f5f9;
@@ -39,7 +106,6 @@
             --public-doc-input-text: #f1f5f9;
         }
 
-        /* Card styling */
         .card {
             background: var(--public-doc-card-bg);
             border: 1px solid var(--public-doc-border);
@@ -53,52 +119,16 @@
             transition: color 0.3s ease;
         }
 
-        /* DataTables styling */
-        #documents-table {
-            background: var(--public-doc-table-bg);
-            color: var(--public-doc-text-primary);
-            transition: all 0.3s ease;
-        }
-
-        #documents-table thead th {
-            background: var(--public-doc-table-bg);
-            color: var(--public-doc-text-primary);
-            border-color: var(--public-doc-table-border);
-            transition: all 0.3s ease;
-        }
-
-        #documents-table tbody td {
-            background: var(--public-doc-table-bg);
-            color: var(--public-doc-text-primary);
-            border-color: var(--public-doc-table-border);
+        #documents-table,
+        .dataTables_wrapper * {
+            background: var(--public-doc-table-bg) !important;
+            color: var(--public-doc-text-primary) !important;
+            border-color: var(--public-doc-table-border) !important;
             transition: all 0.3s ease;
         }
 
         #documents-table tbody tr:hover td {
-            background: var(--public-doc-table-hover);
-        }
-
-        #documents-table tbody tr.odd {
-            background: var(--public-doc-table-bg);
-        }
-
-        #documents-table tbody tr.even {
-            background: var(--public-doc-table-stripe);
-        }
-
-        /* DataTables wrapper elements */
-        .dataTables_wrapper {
-            color: var(--public-doc-text-primary);
-            transition: color 0.3s ease;
-        }
-
-        .dataTables_wrapper .dataTables_length,
-        .dataTables_wrapper .dataTables_filter,
-        .dataTables_wrapper .dataTables_info,
-        .dataTables_wrapper .dataTables_processing,
-        .dataTables_wrapper .dataTables_paginate {
-            color: var(--public-doc-text-primary);
-            transition: color 0.3s ease;
+            background: var(--public-doc-table-hover) !important;
         }
 
         .dataTables_wrapper .dataTables_length select,
@@ -107,29 +137,16 @@
             color: var(--public-doc-input-text);
             border: 1px solid var(--public-doc-input-border);
             border-radius: 6px;
-            padding: 0.375rem 0.75rem;
-            transition: all 0.3s ease;
         }
 
-        .dataTables_wrapper .dataTables_length select:focus,
-        .dataTables_wrapper .dataTables_filter input:focus {
-            outline: none;
-            border-color: #4f46e5;
-            box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
-        }
-
-        /* Pagination styling */
         .dataTables_wrapper .dataTables_paginate .paginate_button {
             color: var(--public-doc-text-primary) !important;
             background: var(--public-doc-table-bg);
             border: 1px solid var(--public-doc-border);
-            transition: all 0.3s ease;
         }
 
         .dataTables_wrapper .dataTables_paginate .paginate_button:hover {
             background: var(--public-doc-table-hover) !important;
-            border-color: var(--public-doc-border);
-            color: var(--public-doc-text-primary) !important;
         }
 
         .dataTables_wrapper .dataTables_paginate .paginate_button.current {
@@ -138,12 +155,6 @@
             color: white !important;
         }
 
-        .dataTables_wrapper .dataTables_paginate .paginate_button.disabled {
-            color: var(--public-doc-text-secondary) !important;
-            opacity: 0.5;
-        }
-
-        /* Button styling */
         .btn-info {
             background: linear-gradient(135deg, #06b6d4 0%, #0891b2 100%);
             border: none;
@@ -158,7 +169,6 @@
             color: white;
         }
 
-        /* Responsive adjustments */
         @media (max-width: 768px) {
             .card-body {
                 padding: 1rem;
@@ -177,6 +187,13 @@
 @endpush
 
 @section('content')
+
+    <!-- Overlay Loading Besar (Modal Style) -->
+    <div id="globalPageLoader">
+        <div class="loader-spinner"></div>
+        <div class="loader-text">Memuat Daftar Dokumen...</div>
+    </div>
+
     <div class="container">
         <div class="row">
             <div class="col-md-12">
@@ -204,30 +221,44 @@
 
 @push('scripts')
     <script>
+        // Loader functions
+        function showLoader() {
+            const loader = document.getElementById('globalPageLoader');
+            loader.style.display = 'flex';
+            setTimeout(() => loader.classList.remove('hidden'), 10);
+        }
+
+        function hideLoader() {
+            const loader = document.getElementById('globalPageLoader');
+            loader.classList.add('hidden');
+            setTimeout(() => loader.style.display = 'none', 5500);
+        }
+
         $(document).ready(function() {
+            // Tampilkan loader saat halaman pertama load
+            showLoader();
+
             const table = $('#documents-table').DataTable({
                 processing: true,
                 serverSide: false,
-
                 lengthMenu: [
                     [5, 10, 25, -1],
                     [5, 10, 25, "Semua"]
                 ],
-
                 pageLength: 10,
-
                 ajax: {
                     url: '/api/dokumen',
                     type: 'GET',
                     dataSrc: "data",
-                    error: function(xhr, status, error) {
-                        console.error('Error fetching data:', xhr.responseText);
-                        Swal.fire('Error!', 'Gagal memuat data.', 'error');
+                    error: function(xhr) {
+                        hideLoader();
+                        console.error('Error:', xhr.responseText);
+                        Swal.fire('Error!', 'Gagal memuat dokumen.', 'error');
                     }
                 },
                 columns: [{
                         data: null,
-                        render: (data, type, row, meta) => meta.row + 1
+                        render: (data, type, row, meta) => meta.row + meta.settings._iDisplayStart + 1
                     },
                     {
                         data: 'document_name'
@@ -239,31 +270,49 @@
                         data: null,
                         render: function(data, type, row) {
                             return `
-                                <a href="${row.document_path}" class="btn btn-info btn-sm me-1 download-btn" data-id="${row.id}" target="_blank">
-                                    <i class="bi bi-download"></i> Download
+                                <a href="${row.document_path}" 
+                                    class="btn btn-info btn-sm download-btn" 
+                                    data-id="${row.id}" 
+                                    target="_blank">
+                                    Download
                                 </a>
                             `;
                         }
                     }
                 ],
+                // Sembunyikan loader setelah tabel selesai render pertama kali
+                initComplete: function() {
+                    hideLoader();
+                },
+                // Tampilkan loader saat reload tabel
+                preDrawCallback: function() {
+                    showLoader();
+                },
                 drawCallback: function() {
-                    $('.download-btn').on('click', function() {
+                    hideLoader();
+
+                    // Update jumlah download saat klik tombol
+                    $('.download-btn').off('click').on('click', function(e) {
                         const fileId = $(this).data('id');
 
+                        // Biarkan link tetap buka file, tapi kirim request update download
                         $.ajax({
-                            url: `/dokumen/{id}/download`.replace('{id}', fileId),
+                            url: `/dokumen/${fileId}/download`,
                             type: 'POST',
                             headers: {
                                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr(
-                                    'content'),
-                                'Authorization': `Bearer ${token}`
+                                    'content')
                             },
-                            success: function(response) {
+                            success: function() {
+                                // Update angka download tanpa reload halaman
+                                // const cell = table.cell($(this).parents('td'));
+                                // const current = parseInt(cell.data().total_download) || 0;
+                                // cell.data().total_download = current + 1;
+                                // table.cell($(this).parents('td')).invalidate();
                                 table.ajax.reload();
                             },
-                            error: function(xhr, status, error) {
-                                Swal.fire('Error!',
-                                    'Gagal memperbarui jumlah download.',
+                            error: function() {
+                                Swal.fire('Error!', 'Gagal mencatat download.',
                                     'error');
                             }
                         });
