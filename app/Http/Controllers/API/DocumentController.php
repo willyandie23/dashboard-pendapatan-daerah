@@ -16,7 +16,8 @@ use Illuminate\Support\Facades\Storage;
  *     @OA\Property(property="id", type="integer", example=1),
  *     @OA\Property(property="document_name", type="string", example="document_example.pdf"),
  *     @OA\Property(property="document_path", type="string", example="http://example.com/storage/file_example.pdf"),
- *     @OA\Property(property="total_download", type="integer", example=10)
+ *     @OA\Property(property="total_download", type="integer", example=10),
+ *     @OA\Property(property="display", type="boolean", example=false)
  * )
  */
 class DocumentController extends Controller
@@ -70,7 +71,8 @@ class DocumentController extends Controller
      *     @OA\RequestBody(
      *         required=true,
      *         @OA\JsonContent(
-     *             @OA\Property(property="file", type="string", format="binary", description="PDF file")
+     *             @OA\Property(property="file", type="string", format="binary", description="PDF file"),
+     *             @OA\Property(property="display", type="boolean", example=false) 
      *         )
      *     ),
      *     @OA\Response(
@@ -103,6 +105,7 @@ class DocumentController extends Controller
         $request->validate([
             'document_name' => 'required|string|max:255',
             'file' => 'required|mimes:pdf,doc,docx,xls,xlsx|max:5120',
+            'display' => 'nullable|boolean',
         ], [
             'document_name.required' => 'Nama dokumen wajib diisi',
             'document_name.max' => 'Nama dokumen maksimal 255 karakter',
@@ -135,6 +138,7 @@ class DocumentController extends Controller
                 'document_name' => $request->document_name,
                 'document_path' => Storage::url($path),
                 'total_download' => 0,
+                'display' => $request->boolean('display', true),
             ]);
 
             return response()->json([
@@ -211,7 +215,8 @@ class DocumentController extends Controller
      *         required=true,
      *         @OA\JsonContent(
      *             @OA\Property(property="document_name", type="string", example="updated_file.pdf"),
-     *             @OA\Property(property="file", type="string", format="binary", description="PDF file to replace")
+     *             @OA\Property(property="file", type="string", format="binary", description="PDF file to replace"),
+     *             @OA\Property(property="display", type="boolean", example=true)
      *         )
      *     ),
      *     @OA\Response(
@@ -244,7 +249,8 @@ class DocumentController extends Controller
 
         $request->validate([
             'document_name' => 'required|string|max:255',
-            'file' => 'nullable|mimes:pdf,doc,docx,xls,xlsx|max:5120', // nullable untuk edit
+            'file' => 'nullable|mimes:pdf,doc,docx,xls,xlsx|max:5120',
+            'display' => 'nullable|boolean',
         ], [
             'document_name.required' => 'Nama dokumen wajib diisi',
             'document_name.max' => 'Nama dokumen maksimal 255 karakter',
@@ -255,6 +261,7 @@ class DocumentController extends Controller
         try {
             // Update nama dokumen
             $documents->document_name = $request->document_name;
+            $documents->display = $request->boolean('display', $documents->display);
 
             // Update file jika ada file baru
             if ($request->hasFile('file')) {

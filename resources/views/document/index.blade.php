@@ -205,6 +205,35 @@
             transform: translateY(-1px);
         }
 
+        /* Status Display Badge Styling */
+        .status-badge {
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            font-size: 0.875rem;
+            font-weight: 500;
+            text-align: center;
+        }
+
+        .status-public {
+            background-color: #d1fae5;
+            color: #065f46;
+        }
+
+        .status-private {
+            background-color: #fee2e2;
+            color: #991b1b;
+        }
+
+        [data-theme="dark"] .status-public {
+            background-color: #064e3b;
+            color: #d1fae5;
+        }
+
+        [data-theme="dark"] .status-private {
+            background-color: #7f1d1d;
+            color: #fee2e2;
+        }
+
         /* Responsive adjustments */
         @media (max-width: 768px) {
             .card-body {
@@ -218,6 +247,11 @@
 
             table.dataTable tbody td {
                 font-size: 0.875rem;
+            }
+
+            .status-badge {
+                font-size: 0.75rem;
+                padding: 0.2rem 0.4rem;
             }
         }
 
@@ -245,6 +279,7 @@
                                         <th>No</th>
                                         <th>Nama Dokumen</th>
                                         <th>Total Download</th>
+                                        <th>Status</th>
                                         <th>Aksi</th>
                                     </tr>
                                 </thead>
@@ -290,6 +325,16 @@
                     },
                     {
                         data: 'total_download'
+                    },
+                    {
+                        data: 'display',
+                        render: function(data, type, row) {
+                            if (data === true || data === 1) {
+                                return '<span class="status-badge status-public">Publik</span>';
+                            } else {
+                                return '<span class="status-badge status-private">Tidak Publik</span>';
+                            }
+                        }
                     },
                     {
                         data: null,
@@ -374,7 +419,7 @@
                         const fileId = $(this).data('id');
 
                         $.ajax({
-                            url: `/dokumen/{id}/download`.replace('{id}', fileId),
+                            url: `/dokumen/${fileId}/download`,
                             type: 'POST',
                             headers: {
                                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr(

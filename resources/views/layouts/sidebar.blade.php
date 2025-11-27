@@ -43,11 +43,11 @@
                                 class="ri-circle-fill circle-icon text-danger-main w-auto"></i>
                             PBB</a>
                     </li>
-                    <li>
+                    {{-- <li>
                         <a href="{{ route('laporan.bphtb') }}"><i
                                 class="ri-circle-fill circle-icon text-success-main w-auto"></i>
                             BPHTB</a>
-                    </li>
+                    </li> --}}
                     <li>
                         <a href="{{ route('laporan.penerimaan-opd') }}"><i
                                 class="ri-circle-fill circle-icon text-purple w-auto"></i> Penerimaan

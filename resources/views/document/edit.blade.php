@@ -521,6 +521,93 @@
     </style>
 @endpush
 
+{{-- @section('content')
+    <div class="container upload-container">
+        <div class="row">
+            <div class="col-12">
+                <div class="card shadow-sm">
+                    <div class="card-body">
+                        <h4 class="card-title mb-4">Edit Dokumen</h4>
+
+                        <form id="updateForm" enctype="multipart/form-data">
+                            @csrf
+                            @method('PUT')
+
+                            <div class="form-group mb-4">
+                                <label for="document_name" class="form-label">Nama Dokumen</label>
+                                <input type="text" name="document_name" id="document_name" class="form-control"
+                                    placeholder="Masukkan nama dokumen" value="{{ $document->document_name }}" required>
+                            </div>
+
+                            <!-- Current File Display -->
+                            <div class="current-file" id="currentFile">
+                                <div class="current-file-header">
+                                    <i class="bi bi-file-earmark"></i> File Saat Ini
+                                </div>
+                                <div class="current-file-info">
+                                    <div class="current-file-icon">📄</div>
+                                    <div class="current-file-name" id="currentFileName">
+                                        {{ basename($document->document_path) }}
+                                    </div>
+                                    <button type="button" class="btn btn-sm btn-outline-primary change-file-btn"
+                                        id="changeFileBtn">
+                                        <i class="bi bi-arrow-repeat"></i> Ganti File
+                                    </button>
+                                </div>
+                            </div>
+
+                            <!-- Drag & Drop Zone (Hidden initially) -->
+                            <div class="drop-zone" id="dropZone">
+                                <div class="drop-zone-icon">📁</div>
+                                <div class="drop-zone-text">
+                                    <strong>Seret file ke sini</strong> atau klik untuk memilih
+                                </div>
+                                <div class="drop-zone-hint">
+                                    Format yang didukung: PDF, DOC, DOCX, XLS, XLSX (Maks. 5MB)
+                                </div>
+                            </div>
+
+                            <input type="file" name="file" id="file" accept=".pdf,.doc,.docx,.xls,.xlsx">
+
+                            <!-- New File Preview -->
+                            <div class="file-preview" id="filePreview">
+                                <div class="file-info">
+                                    <div class="file-icon">📄</div>
+                                    <div class="file-details">
+                                        <div class="file-name" id="fileName"></div>
+                                        <div class="file-size" id="fileSize"></div>
+                                    </div>
+                                    <div class="remove-file" id="removeFile" title="Hapus file">
+                                        ✕
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Upload Progress -->
+                            <div class="upload-progress" id="uploadProgress">
+                                <label class="form-label">Proses Update:</label>
+                                <div class="progress">
+                                    <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar"
+                                        id="progressBar" style="width: 0%"></div>
+                                </div>
+                            </div>
+
+                            <div class="form-actions">
+                                <button type="submit" class="btn btn-success" id="submitBtn">
+                                    <i class="bi bi-check-circle"></i> Update Dokumen
+                                </button>
+                                <a href="{{ route('document.index') }}" class="btn btn-outline-secondary">
+                                    <i class="bi bi-x-circle"></i> Batal
+                                </a>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+@endsection --}}
+
 @section('content')
     <div class="container upload-container">
         <div class="row">
@@ -537,6 +624,18 @@
                                 <label for="document_name" class="form-label">Nama Dokumen</label>
                                 <input type="text" name="document_name" id="document_name" class="form-control"
                                     placeholder="Masukkan nama dokumen" value="{{ $document->document_name }}" required>
+                            </div>
+
+                            <!-- Tambahan: Field untuk Display Status -->
+                            <div class="form-group mb-4">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" name="display" id="display" 
+                                           value="1" {{ $document->display ? 'checked' : '' }}>
+                                    <label class="form-check-label" for="display">
+                                        Tampilkan di Publik (Status Display)
+                                    </label>
+                                </div>
+                                <small class="form-text text-muted">Jika dicentang, dokumen akan tampil di halaman publik.</small>
                             </div>
 
                             <!-- Current File Display -->

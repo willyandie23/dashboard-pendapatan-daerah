@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Dokumen')
+@section('title', 'Dokumen Publik')
 
 @push('styles')
     <style>
@@ -191,7 +191,7 @@
     <!-- Overlay Loading Besar (Modal Style) -->
     <div id="globalPageLoader">
         <div class="loader-spinner"></div>
-        <div class="loader-text">Memuat Daftar Dokumen...</div>
+        <div class="loader-text">Memuat Daftar Dokumen Publik...</div>
     </div>
 
     <div class="container">
@@ -231,7 +231,7 @@
         function hideLoader() {
             const loader = document.getElementById('globalPageLoader');
             loader.classList.add('hidden');
-            setTimeout(() => loader.style.display = 'none', 5500);
+            setTimeout(() => loader.style.display = 'none', 500);
         }
 
         $(document).ready(function() {
@@ -246,10 +246,30 @@
                     [5, 10, 25, "Semua"]
                 ],
                 pageLength: 10,
+                language: {
+                    emptyTable: "Tidak ada dokumen yang ditampilkan saat ini."
+                },
                 ajax: {
-                    url: '/api/dokumen',
+                    url: '/api/dokumen',  // Fetch semua data dari endpoint yang sama
                     type: 'GET',
-                    dataSrc: "data",
+                    dataSrc: function(json) {
+                        // Filter hanya dokumen dengan display = true (client-side)
+                        // Support response shapes: an array, or { success:..., data: [...] }, or { data: [...] }
+                        var items = [];
+                        if (Array.isArray(json)) {
+                            items = json;
+                        } else if (json && Array.isArray(json.data)) {
+                            items = json.data;
+                        } else {
+                            return [];
+                        }
+
+                        return items.filter(function(doc) {
+                            if (!doc) return false;
+                            // accept boolean true, numeric 1, string '1' or 'true'
+                            return doc.display === true || doc.display === 1 || doc.display === '1' || doc.display === 'true';
+                        });
+                    },
                     error: function(xhr) {
                         hideLoader();
                         console.error('Error:', xhr.responseText);
@@ -274,7 +294,7 @@
                                     class="btn btn-info btn-sm download-btn" 
                                     data-id="${row.id}" 
                                     target="_blank">
-                                    Download
+                                    <i class="bi bi-download"></i> Download
                                 </a>
                             `;
                         }
@@ -300,20 +320,14 @@
                             url: `/dokumen/${fileId}/download`,
                             type: 'POST',
                             headers: {
-                                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr(
-                                    'content')
+                                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                             },
                             success: function() {
-                                // Update angka download tanpa reload halaman
-                                // const cell = table.cell($(this).parents('td'));
-                                // const current = parseInt(cell.data().total_download) || 0;
-                                // cell.data().total_download = current + 1;
-                                // table.cell($(this).parents('td')).invalidate();
-                                table.ajax.reload();
+                                // Reload tabel untuk update total_download
+                                table.ajax.reload(null, false); 
                             },
                             error: function() {
-                                Swal.fire('Error!', 'Gagal mencatat download.',
-                                    'error');
+                                Swal.fire('Error!', 'Gagal mencatat download.', 'error');
                             }
                         });
                     });
