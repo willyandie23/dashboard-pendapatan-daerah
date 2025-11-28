@@ -9,143 +9,146 @@
                 <button type="button" class="sidebar-mobile-toggle">
                     <iconify-icon icon="heroicons:bars-3-solid" class="icon"></iconify-icon>
                 </button>
-                
+
+                <!-- Dynamic Title - Hanya muncul di md ke atas -->
                 <p id="dynamic-title" class="fw-bold text-uppercase fs-5 mb-0 d-none d-md-block"></p>
-                
+
                 <!-- Filter Tahun -->
                 <div class="dropdown">
-                    <button class="btn btn-outline-danger btn-sm dropdown-toggle d-flex align-items-center gap-1" type="button" id="yearFilter" data-bs-toggle="dropdown" aria-expanded="false">
+                    <button class="btn btn-outline-danger btn-sm dropdown-toggle d-flex align-items-center gap-1" 
+                            type="button" id="yearFilter" data-bs-toggle="dropdown" aria-expanded="false">
                         <iconify-icon icon="heroicons:calendar"></iconify-icon>
                         <span id="selected-year">Memuat...</span>
                     </button>
                     <ul class="dropdown-menu" aria-labelledby="yearFilter" id="yearDropdownMenu">
-                        <!-- Options akan diisi secara dinamis oleh JavaScript -->
+                        <!-- Diisi oleh JS -->
                     </ul>
                 </div>
             </div>
         </div>
+
         <div class="col-auto">
             <div class="d-flex flex-wrap align-items-center gap-3">
-                <div class="date-time-block align-items-left text-end">
-                    <div class="date" id="live-date"></div>
-                    <div class="time" id="live-time"></div>
+                <!-- Live Date & Time - SAMA seperti dynamic-title: HIDDEN di mobile -->
+                <div class="date-time-block text-end d-none d-md-block">
+                    <div class="date fw-medium text-muted" id="live-date"></div>
+                    <div class="time fw-bold text-muted" id="live-time"></div>
                 </div>
+
+                <!-- Theme Toggle -->
                 <button type="button" data-theme-toggle
-                    class="w-40-px h-40-px bg-neutral-200 
-                        rounded-circle d-flex 
-                        justify-content-center 
-                        align-items-center">
+                    class="w-40-px h-40-px bg-neutral-200 rounded-circle d-flex justify-content-center align-items-center">
+                    <iconify-icon icon="heroicons:moon" class="icon dark-icon"></iconify-icon>
+                    <iconify-icon icon="heroicons:sun" class="icon light-icon"></iconify-icon>
                 </button>
             </div>
         </div>
     </div>
 </div>
 
-
 @push('scripts')
-    <script>
-        function updateTime() {
-            const now = new Date();
-            const hours = String(now.getHours()).padStart(2, '0');
-            const minutes = String(now.getMinutes()).padStart(2, '0');
-            const seconds = String(now.getSeconds()).padStart(2, '0');
+<script>
+    // Update Date & Time (sekali per detik, lebih efisien)
+    function updateDateTime() {
+        const now = new Date();
 
-            document.getElementById('live-time').innerText = `${hours}:${minutes}:${seconds}`;
-        }
+        // Format Waktu: 14:25:09
+        const timeStr = now.toLocaleTimeString('id-ID', { 
+            hour: '2-digit', 
+            minute: '2-digit', 
+            second: '2-digit' 
+        });
+        document.getElementById('live-time').textContent = timeStr;
 
-        function updateDate() {
-            const now = new Date();
+        // Format Tanggal: Senin, 10 Maret 2025
+        const dateOptions = { 
+            weekday: 'long', 
+            day: 'numeric', 
+            month: 'long', 
+            year: 'numeric' 
+        };
+        const dateStr = now.toLocaleDateString('id-ID', dateOptions);
+        document.getElementById('live-date').textContent = dateStr.charAt(0).toUpperCase() + dateStr.slice(1);
+    }
 
-            const dayNames = ["Minggu", "Senin", "Selasa", "Rabu", "Kamis", "Jumat", "Sabtu"];
-            const monthNames = ["Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September",
-                "Oktober", "November", "Desember"
-            ];
+    // Load tahun dari API & setup dropdown
+    async function loadYearFilter() {
+        try {
+            const response = await fetch("/api/komposisi-sumber-pendapatan", {
+                headers: { "Accept": "application/json" }
+            });
 
-            const dayName = dayNames[now.getDay()];
-            const day = now.getDate();
-            const monthName = monthNames[now.getMonth()];
-            const year = now.getFullYear();
+            if (!response.ok) throw new Error("Gagal mengambil data");
 
-            document.getElementById('live-date').innerText = `${dayName}, ${day} ${monthName} ${year}`;
-        }
+            const result = await response.json();
 
-        // Ambil tahun dinamis dari API
-        async function loadYearFilter() {
-            try {
-                const response = await fetch("/api/komposisi-sumber-pendapatan", {
-                    method: "GET",
-                    headers: {
-                        "Accept": "application/json"
+            if (result.status !== 200 || !Array.isArray(result.data)) {
+                throw new Error("Format data tidak valid");
+            }
+
+            const years = [...new Set(result.data.map(item => item.tahun))]
+                .sort((a, b) => b - a);
+
+            const latestYear = years[0];
+            const savedYear = localStorage.getItem('selectedYear');
+
+            if (!savedYear && latestYear) {
+                localStorage.setItem('selectedYear', latestYear);
+            }
+
+            const selectedYear = savedYear || latestYear || new Date().getFullYear();
+            localStorage.setItem('selectedYear', selectedYear);
+
+            // Update tampilan
+            document.getElementById('selected-year').textContent = selectedYear;
+
+            // Isi dropdown
+            const menu = document.getElementById('yearDropdownMenu');
+            menu.innerHTML = '';
+
+            years.forEach(year => {
+                const li = document.createElement('li');
+                const a = document.createElement('a');
+                a.className = 'dropdown-item';
+                a.href = '#';
+                a.textContent = year;
+                a.dataset.year = year;
+
+                if (year == selectedYear) a.classList.add('active');
+
+                a.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const chosen = this.dataset.year;
+                    localStorage.setItem('selectedYear', chosen);
+                    document.getElementById('selected-year').textContent = chosen;
+
+                    menu.querySelectorAll('.dropdown-item').forEach(item => 
+                        item.classList.remove('active')
+                    );
+                    this.classList.add('active');
+
+                    if (typeof window.refreshCharts === 'function') {
+                        window.refreshCharts(chosen);
                     }
                 });
-                const result = await response.json();
-                
-                if (result.status === 200 && Array.isArray(result.data)) {
-                    // Extract tahun yang unik dan urutkan descending (terbaru dulu)
-                    const availableYears = [...new Set(result.data.map(d => d.tahun))]
-                        .sort((a, b) => b - a);
-                    
-                    // Ambil tahun terbaru
-                    const latestYear = availableYears[0];
-                    
-                    // Set tahun terbaru di localStorage jika belum ada
-                    if (!localStorage.getItem('selectedYear')) {
-                        localStorage.setItem('selectedYear', latestYear);
-                    }
-                    
-                    const selectedYear = localStorage.getItem('selectedYear');
-                    
-                    // Update display tahun
-                    document.getElementById('selected-year').innerText = selectedYear;
-                    
-                    // Populate dropdown menu
-                    const dropdownMenu = document.getElementById('yearDropdownMenu');
-                    dropdownMenu.innerHTML = '';
-                    
-                    availableYears.forEach(year => {
-                        const li = document.createElement('li');
-                        const a = document.createElement('a');
-                        a.className = 'dropdown-item';
-                        a.href = '#';
-                        a.setAttribute('data-year', year);
-                        a.textContent = year;
-                        
-                        // Mark active year
-                        if (year == selectedYear) {
-                            a.classList.add('active');
-                        }
-                        
-                        // Event listener untuk year selection
-                        a.addEventListener('click', function(e) {
-                            e.preventDefault();
-                            const chosenYear = this.getAttribute('data-year');
-                            localStorage.setItem('selectedYear', chosenYear);
-                            document.getElementById('selected-year').innerText = chosenYear;
-                            
-                            // Update active class
-                            document.querySelectorAll('#yearDropdownMenu .dropdown-item').forEach(item => {
-                                item.classList.remove('active');
-                            });
-                            this.classList.add('active');
-                            
-                            // Trigger refresh charts jika function tersedia
-                            if (typeof window.refreshCharts === 'function') {
-                                window.refreshCharts(chosenYear);
-                            }
-                        });
-                        
-                        li.appendChild(a);
-                        dropdownMenu.appendChild(li);
-                    });
-                }
-            } catch (err) {
-                console.error('Error loading year filter:', err);
-                document.getElementById('selected-year').innerText = new Date().getFullYear();;
-            }
-        }
 
-        updateDate();
-        setInterval(updateTime);
+                li.appendChild(a);
+                menu.appendChild(li);
+            });
+
+        } catch (err) {
+            console.error('Error loading year filter:', err);
+            const currentYear = new Date().getFullYear();
+            document.getElementById('selected-year').textContent = currentYear;
+            localStorage.setItem('selectedYear', currentYear);
+        }
+    }
+
+    // Jalankan saat halaman loaded
+    document.addEventListener('DOMContentLoaded', function() {
+        updateDateTime();        // Pertama kali langsung update
+        setInterval(updateDateTime, 1000);  // Lalu tiap detik
         loadYearFilter();
-    </script>
+    });
+</script>
 @endpush
