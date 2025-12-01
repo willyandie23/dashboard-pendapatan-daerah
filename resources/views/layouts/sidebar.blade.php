@@ -28,7 +28,7 @@
                                 class="ri-circle-fill circle-icon text-primary-600 w-auto"></i> Pendapatan
                             Daerah</a>
                     </li>
-                    <li>
+                    {{-- <li>
                         <a href="{{ route('laporan.pajak-daerah') }}"><i
                                 class="ri-circle-fill circle-icon text-warning-main w-auto"></i>
                             Pajak Daerah</a>
@@ -37,22 +37,22 @@
                         <a href="{{ route('laporan.retribusi-daerah') }}"><i
                                 class="ri-circle-fill circle-icon text-info-main w-auto"></i>
                             Retribusi Daerah</a>
-                    </li>
-                    <li>
+                    </li> --}}
+                    {{-- <li>
                         <a href="{{ route('laporan.pbb') }}"><i
                                 class="ri-circle-fill circle-icon text-danger-main w-auto"></i>
                             PBB</a>
-                    </li>
+                    </li> --}}
                     {{-- <li>
                         <a href="{{ route('laporan.bphtb') }}"><i
                                 class="ri-circle-fill circle-icon text-success-main w-auto"></i>
                             BPHTB</a>
                     </li> --}}
-                    <li>
+                    {{-- <li>
                         <a href="{{ route('laporan.penerimaan-opd') }}"><i
                                 class="ri-circle-fill circle-icon text-purple w-auto"></i> Penerimaan
                             OPD</a>
-                    </li>
+                    </li> --}}
                 </ul>
             </li>
             <li>
