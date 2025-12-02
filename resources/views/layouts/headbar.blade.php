@@ -31,8 +31,8 @@
             <div class="d-flex flex-wrap align-items-center gap-3">
                 <!-- Live Date & Time - SAMA seperti dynamic-title: HIDDEN di mobile -->
                 <div class="date-time-block text-end d-none d-md-block">
-                    <div class="date fw-medium text-muted" id="live-date"></div>
-                    <div class="time fw-bold text-muted" id="live-time"></div>
+                    <div class="date fw-medium" id="live-date"></div>
+                    <div class="time fw-bold" id="live-time"></div>
                 </div>
 
                 <!-- Theme Toggle -->
